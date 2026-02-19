@@ -1,2 +1,2 @@
 # paradox-primitive
-# POW On NOSTR
+# POW on NOSTR
