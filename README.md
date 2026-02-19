@@ -1,1 +1,1 @@
-# NIP-6969
+# paradox-primitive
