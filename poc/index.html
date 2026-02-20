@@ -141,7 +141,7 @@
 </head>
 <body>
 
-<div id="balance-display">⚡ — sats</div>
+<div id="balance-display">User: ⚡ 0 sats<br>Agent: ⚡ 0 sats</div>
 <div id="fireworks"></div>
 
 <div style="max-width:1080px; margin:0 auto;">
@@ -246,11 +246,11 @@
   </div>
 
   <div class="footer">
-    Real events on Nostr relays (damus · primal · nos.lol) &nbsp;·&nbsp;
+    Real events on Nostr relays (damus · primal · nos.lol) · 
     <a href="https://github.com/paradoxyou/paradox-primitive" target="_blank">GitHub</a>
-    &nbsp;·&nbsp;
+    · 
     <a href="https://paradox.you" target="_blank">Full NIP Spec</a>
-    &nbsp;·&nbsp; Paradox Primitive α — kind numbers subject to change
+    · Paradox Primitive α — kind numbers subject to change
   </div>
 
 </div>
@@ -451,8 +451,8 @@ function triggerAgentCountdown(task1069) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Kind 1070 — Completion Claim
- // ─────────────────────────────────────────────────────────────────────────────
+// Kind 1070 — Completion Claim
+// ─────────────────────────────────────────────────────────────────────────────
 async function post1070(task1069) {
   if (!agentSk) { log('Agent key not ready', 'error'); return; }
   const proofUrl = 'https://paradoxyou.github.io/paradox-primitive/poc/proof.jpg';
@@ -465,7 +465,7 @@ async function post1070(task1069) {
       ['e', task1069.id, '', 'root'],
       ['p', task1069.pubkey],
       ['proof', 'type', 'image'],
-      ['proof', 'url', proofUrl'],
+      ['proof', 'url', proofUrl],
       ['proof', 'sha256', 'a'.repeat(64)],
       ['nonce', nonce],
       ['agent', 'model', 'paradox-agent-v0.1'],
@@ -516,11 +516,11 @@ async function verify1071(claimId) {
     if (simulate) {
       if (bountyMsats > 0) {
         simBalance = Math.max(0, simBalance - bountyMsats);
-        agentSimBalance = (agentSimBalance || 0) + bountyMsats; // track agent rise
+        agentSimBalance = (agentSimBalance || 0) + bountyMsats;
         setBalanceDisplay(simBalance, agentSimBalance);
         log(`⚡ Simulated: sent ${Math.floor(bountyMsats/1000)} sats to agent 🍄`, 'warn');
       }
-      if (statusEl) statusEl.innerHTML = '<span style="color:#F59E0B">Simulated 🍄</span>';
+      if (statusEl) statusEl.innerHTML = '<span style="color:#10B981">Success (simulated) 🍄</span>';
     } else if (nwcClient && bountyMsats > 0) {
       log(`⚡ Sending ${Math.floor(bountyMsats/1000)} sats via NWC…`, 'info');
       try {
@@ -544,12 +544,10 @@ async function verify1071(claimId) {
             throw new Error('No invoice returned from LNURL');
           }
         }
-
         const result = await nwcClient.payInvoice({ invoice: invoiceToPay });
         // Null-safe preimage + success check
         const preimageSnippet = result.preimage ? result.preimage.slice(0,20) + '…' : '(no preimage returned)';
         log(`💸 Paid! Preimage: ${preimageSnippet} 🍄`, 'success');
-
         const info = await nwcClient.getBalance();
         simBalance = info.balance;
         agentSimBalance = (agentSimBalance || 0) + bountyMsats;
@@ -564,7 +562,6 @@ async function verify1071(claimId) {
       log('No wallet or bounty — payment skipped 🍄', 'warn');
       if (statusEl) statusEl.innerHTML = '<span style="color:#F59E0B">Skipped 🍄</span>';
     }
-
     const summary = {
       task: task?.content?.slice(0, 60) || 'Unknown task',
       sats: Math.floor(bountyMsats / 1000),
@@ -573,7 +570,6 @@ async function verify1071(claimId) {
     resolved.push(summary);
     delete openTasks[taskId];
     delete openClaims[claimId];
-
     renderTasks();
     renderClaims();
     renderResolved();
@@ -607,7 +603,7 @@ function renderTasks() {
         <div class="event-content">${esc(t.content)}</div>
         <div class="event-meta">
           Bounty: ${sats} sats &nbsp;·&nbsp;
-          ID: <a href="https://nostr.com/e/$$   {t.id}" target="_blank">   $${t.id.slice(0,12)}… ↗</a>
+          ID: <a href="https://nostr.com/e/${t.id}" target="_blank">${t.id.slice(0,12)}… ↗</a>
         </div>
         <div class="event-status">
           ${hasClaim ? '🤖 Claim received — check below 🍄' : '⏳ Awaiting agent claim…'}
@@ -629,7 +625,7 @@ function renderClaims() {
         <div class="event-content">${esc(claim.content)}</div>
         <div class="event-meta">
           Agent: ${claim.pubkey.slice(0,12)}… &nbsp;·&nbsp;
-          ID: <a href="https://nostr.com/e/$$   {claim.id}" target="_blank">   $${claim.id.slice(0,12)}… ↗</a>
+          ID: <a href="https://nostr.com/e/${claim.id}" target="_blank">${claim.id.slice(0,12)}… ↗</a>
           ${proofUrl ? `
             <div style="margin-top:8px;">
               <img src="${esc(proofUrl)}" alt="Proof Image" style="max-width:100%;border-radius:6px;border:1px solid #1a1f35;" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200/1a1f35/00F5FF?text=Proof+Failed+to+Load';" />
@@ -654,7 +650,7 @@ function renderResolved() {
   el.innerHTML = resolved.map(r => `
     <div class="event-card resolved-card">
       <div class="event-kind">KIND 1071 · RESOLVED ✅</div>
-      <div class="event-content">$$   {esc(r.task)}   $${r.task.length >= 60 ? '…' : ''}</div>
+      <div class="event-content">${esc(r.task)}${r.task.length >= 60 ? '…' : ''}</div>
       <div class="event-meta">
         Paid: ${r.sats} sats &nbsp;·&nbsp;
         <a href="https://nostr.com/e/${r.eventId}" target="_blank">View 1071 ↗</a>
