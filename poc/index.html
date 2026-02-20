@@ -6,7 +6,6 @@
   <title>Paradox Primitive POC ⚡</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: #020309;
       color: #D1D5DB;
@@ -14,14 +13,12 @@
       min-height: 100vh;
       padding: 20px;
     }
-
     h1 { color: #00F5FF; font-size: 1.6rem; margin-bottom: 4px; }
     h2 { color: #00F5FF; font-size: 0.95rem; margin: 20px 0 10px;
          border-bottom: 1px solid #1a1f35; padding-bottom: 6px; }
     h3 { color: #7C3AED; font-size: 0.82rem; margin: 14px 0 6px; }
     .subtitle { color: #6B7280; font-size: 0.82rem; margin-bottom: 24px; }
     a { color: #00F5FF; }
-
     /* Balance corner */
     #balance-display {
       position: fixed; top: 14px; right: 14px;
@@ -35,7 +32,6 @@
       transform: scale(1.2);
       box-shadow: 0 0 30px #00F5FF88;
     }
-
     /* Fireworks */
     #fireworks {
       display: none; position: fixed;
@@ -51,7 +47,6 @@
       0% { transform: translate(-50%,-50%) scale(0.4); opacity: 0; }
       100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
     }
-
     .grid {
       display: grid;
       grid-template-columns: 380px 1fr;
@@ -60,7 +55,6 @@
       margin: 0 auto;
     }
     @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
-
     .panel {
       background: #0A0A1F;
       border: 1px solid #1a1f35;
@@ -68,7 +62,6 @@
       padding: 16px;
       margin-bottom: 16px;
     }
-
     input, textarea, select {
       width: 100%; background: #020309;
       border: 1px solid #2a2f45; color: #D1D5DB;
@@ -79,7 +72,6 @@
     input:focus, textarea:focus { outline: none; border-color: #00F5FF; }
     textarea { height: 64px; resize: vertical; }
     input[type="password"] { letter-spacing: 2px; }
-
     button {
       background: #00F5FF; color: #020309;
       border: none; padding: 8px 18px;
@@ -91,10 +83,9 @@
     button:hover { opacity: 0.82; }
     button:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn-purple { background: #7C3AED; color: white; }
-    .btn-green  { background: #10B981; color: white; margin-right: 8px; }
-    .btn-red    { background: #EF4444; color: white; }
-    .btn-small  { padding: 5px 12px; font-size: 0.78rem; }
-
+    .btn-green { background: #10B981; color: white; margin-right: 8px; }
+    .btn-red { background: #EF4444; color: white; }
+    .btn-small { padding: 5px 12px; font-size: 0.78rem; }
     .event-card {
       background: #020309; border: 1px solid #1a1f35;
       border-radius: 8px; padding: 12px; margin-bottom: 10px;
@@ -108,20 +99,17 @@
     .event-content { font-size: 0.88rem; margin-bottom: 6px; }
     .event-meta { color: #6B7280; font-size: 0.73rem; margin-bottom: 8px; }
     .event-status { color: #F59E0B; font-size: 0.78rem; }
-
     .nip-badge {
       display: inline-block; background: #7C3AED22;
       color: #7C3AED; border: 1px solid #7C3AED44;
       padding: 2px 8px; border-radius: 4px;
       font-size: 0.68rem; margin-left: 8px; vertical-align: middle;
     }
-
     .flow-arrow {
       text-align: center; color: #7C3AED;
       font-size: 1.1rem; padding: 4px 0;
       font-weight: bold; letter-spacing: 2px;
     }
-
     #log {
       max-height: 200px; overflow-y: auto;
       padding-right: 4px;
@@ -134,26 +122,22 @@
       line-height: 1.4;
     }
     .log-success { color: #10B981; }
-    .log-error   { color: #EF4444; }
-    .log-warn    { color: #F59E0B; }
-    .log-info    { color: #6B7280; }
-
+    .log-error { color: #EF4444; }
+    .log-warn { color: #F59E0B; }
+    .log-info { color: #6B7280; }
     .status-line {
       font-size: 0.78rem; margin-top: 6px;
       min-height: 18px;
     }
     .empty { color: #6B7280; font-size: 0.83rem; font-style: italic; }
-
     .countdown {
       display: inline-block;
       color: #F59E0B; font-weight: bold;
     }
-
     .footer {
       text-align: center; margin-top: 30px;
       color: #374151; font-size: 0.75rem;
     }
-
     .toggle-label { color: #6B7280; font-size: 0.78rem; margin-top: 6px; }
   </style>
 </head>
@@ -170,9 +154,13 @@
     Real Nostr events &nbsp;·&nbsp; No middlemen &nbsp;·&nbsp; ⚡🍄
   </p>
 
+  <p style="color:#6B7280;font-size:0.82rem;text-align:center;margin-bottom:20px;">
+    POC uses per-browser agent keys for demo — production agents will be fixed services with persistent pubkeys.
+  </p>
+
   <div class="grid">
 
-    <!-- ── LEFT COLUMN ───────────────────────────────────── -->
+    <!-- LEFT COLUMN -->
     <div>
 
       <!-- Setup panel -->
@@ -187,26 +175,13 @@
           Auto-generating demo key…
         </div>
 
-        <h3>2. Lightning Wallet (Alby NWC)</h3>
+        <h3>2. Lightning Wallet (NWC)</h3>
         <input id="inp-nwc" type="password"
           placeholder="nostr+walletconnect://..." />
         <button onclick="connectWallet()">Connect Wallet</button>
         <div id="status-wallet" class="status-line" style="color:#6B7280">
           Not connected — balance will simulate
         </div>
-        <p style="font-size:0.72rem;color:#6B7280;margin-top:6px;">
-          Get free NWC at
-          <a href="https://getalby.com" target="_blank">getalby.com</a>
-          → Developer → Nostr Wallet Connect
-        </p>
-
-        <h3>3. Optional: Real Payment Invoice</h3>
-        <input id="inp-invoice"
-          placeholder="bolt11 invoice (lnbc...) — leave blank to simulate" />
-        <p style="font-size:0.72rem;color:#6B7280;">
-          In production the claimer auto-generates this.
-          For demo: generate one in Alby → Receive.
-        </p>
 
         <div class="toggle-label">
           <input type="checkbox" id="simulate-mode" checked />
@@ -224,7 +199,7 @@
 
     </div>
 
-    <!-- ── RIGHT COLUMN ──────────────────────────────────── -->
+    <!-- RIGHT COLUMN -->
     <div>
 
       <!-- Post 1069 -->
@@ -279,7 +254,7 @@
     Real events on Nostr relays (damus · primal · nos.lol) &nbsp;·&nbsp;
     <a href="https://github.com/paradoxyou/paradox-primitive" target="_blank">GitHub</a>
     &nbsp;·&nbsp;
-    <a href="https://paradoxyou.ju.mp" target="_blank">Full NIP Spec</a>
+    <a href="https://paradox.you" target="_blank">Full NIP Spec</a>
     &nbsp;·&nbsp; Paradox Primitive α — kind numbers subject to change
   </div>
 
@@ -287,54 +262,50 @@
 
 <script type="module">
 // ─────────────────────────────────────────────────────────────────────────────
- // Imports — nostr-tools v2 + Alby SDK via esm.sh CDN
+// Imports
 // ─────────────────────────────────────────────────────────────────────────────
 import {
   generateSecretKey,
   getPublicKey,
   finalizeEvent
 } from 'https://esm.sh/nostr-tools@2.7.2/pure';
-
 import { SimplePool } from 'https://esm.sh/nostr-tools@2.7.2/pool';
-
 import { hexToBytes } from 'https://esm.sh/@noble/hashes@1.4.0/utils';
-
 import { nwc } from 'https://esm.sh/@getalby/sdk@3.9.0';
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Config
+// Config
 // ─────────────────────────────────────────────────────────────────────────────
 const RELAYS = [
   'wss://relay.damus.io',
   'wss://relay.primal.net',
   'wss://nos.lol'
 ];
-
-const AGENT_DELAY_MS = 3000; // drama delay before agent auto-replies
-
-// ─────────────────────────────────────────────────────────────────────────────
- // State
-// ─────────────────────────────────────────────────────────────────────────────
-const pool     = new SimplePool();
-let   userSk   = null;   // Uint8Array
-let   userPk   = null;   // hex string
-let   agentSk  = null;   // Uint8Array
-let   agentPk  = null;   // hex string
-let   nwcClient = null;
-let   simBalance = 50000; // simulated msats when no wallet connected
-
-const openTasks   = {};  // eventId → event
-const openClaims  = {};  // eventId → { claim, taskId }
-const resolved    = [];  // array of summary strings
+const AGENT_DELAY_MS = 3000; // drama delay
+const AGENT_LIGHTNING_ADDRESS = 'paradoxprimitive@lnaddress.com'; // ← YOUR ADDRESS HERE
 
 // ─────────────────────────────────────────────────────────────────────────────
- // DOM helpers
+// State
 // ─────────────────────────────────────────────────────────────────────────────
-const $  = id => document.getElementById(id);
-const esc = s  => String(s).replace(/< /g,'&lt;').replace(/>/g,'&gt;');
+const pool = new SimplePool();
+let userSk = null;
+let userPk = null;
+let agentSk = null;
+let agentPk = null;
+let nwcClient = null;
+let simBalance = 50000; // simulated msats
+const openTasks = {};
+const openClaims = {};
+const resolved = [];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DOM helpers
+// ─────────────────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 function log(msg, type = 'info') {
-  const el   = $('log');
+  const el = $('log');
   const line = document.createElement('div');
   line.className = `log-line log-${type}`;
   line.textContent = `${new Date().toLocaleTimeString()} — ${msg}`;
@@ -357,13 +328,22 @@ function showFireworks() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Keys
+// Keys (persistent agent via localStorage)
 // ─────────────────────────────────────────────────────────────────────────────
-function setupKeys() {
-  // Always generate a fresh agent keypair
-  agentSk = generateSecretKey();
+function loadOrCreateAgentKey() {
+  const stored = localStorage.getItem('paradox_agent_sk');
+  if (stored) {
+    agentSk = hexToBytes(stored);
+  } else {
+    agentSk = generateSecretKey();
+    localStorage.setItem('paradox_agent_sk', 
+      Array.from(agentSk).map(b => b.toString(16).padStart(2,'0')).join(''));
+  }
   agentPk = getPublicKey(agentSk);
+  log(`Agent key loaded. Pubkey: ${agentPk.slice(0,16)}… (persistent)`, 'info');
+}
 
+function setupKeys() {
   const input = $('inp-sk').value.trim();
   try {
     if (input.length === 64) {
@@ -387,7 +367,7 @@ function setupKeys() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Wallet
+// Wallet
 // ─────────────────────────────────────────────────────────────────────────────
 async function connectWallet() {
   const url = $('inp-nwc').value.trim();
@@ -402,10 +382,9 @@ async function connectWallet() {
     simBalance = info.balance;
     setBalanceDisplay(simBalance);
     $('status-wallet').innerHTML =
-      `<span style="color:#10B981">✅ Alby connected — ` +
+      `<span style="color:#10B981">✅ Connected — ` +
       `${Math.floor(simBalance/1000).toLocaleString()} sats</span>`;
     log(`Wallet connected. Balance: ${Math.floor(simBalance/1000)} sats`, 'success');
-    // Save to session so refresh doesn't wipe it
     sessionStorage.setItem('nwc_url', url);
   } catch(e) {
     $('status-wallet').innerHTML = `<span style="color:#EF4444">❌ ${e.message}</span>`;
@@ -415,19 +394,15 @@ async function connectWallet() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Kind 1069 — Task Request
+// Kind 1069 — Task Request
 // ─────────────────────────────────────────────────────────────────────────────
 async function post1069() {
   if (!userSk) { log('Set up keys first', 'error'); return; }
-
-  const desc   = $('inp-task').value.trim();
+  const desc = $('inp-task').value.trim();
   const bounty = parseInt($('inp-bounty').value) || 0;
-  const expHrs = parseInt($('inp-exp').value)    || 24;
-
+  const expHrs = parseInt($('inp-exp').value) || 24;
   if (!desc) { log('Task description is required', 'error'); return; }
-
   const expiration = Math.floor(Date.now() / 1000) + expHrs * 3600;
-
   const event = finalizeEvent({
     kind: 1069,
     content: desc,
@@ -438,10 +413,8 @@ async function post1069() {
       ['expiration', String(expiration)],
     ]
   }, userSk);
-
   $('btn-post').disabled = true;
-  $('status-post').textContent = 'Publishing to relays…';
-
+  $('status-post').textContent = 'Publishing…';
   try {
     await Promise.any(pool.publish(RELAYS, event));
     openTasks[event.id] = event;
@@ -452,8 +425,6 @@ async function post1069() {
     renderTasks();
     $('inp-task').value = '';
     $('inp-bounty').value = '';
-
-    // Start agent countdown
     triggerAgentCountdown(event);
   } catch(e) {
     log(`Relay publish failed: ${e.message}`, 'error');
@@ -464,12 +435,11 @@ async function post1069() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Agent countdown — visual drama before 1070
+// Agent countdown
 // ─────────────────────────────────────────────────────────────────────────────
 function triggerAgentCountdown(task1069) {
-  log('🤖 Agent detected task… preparing claim…', 'info');
+  log('🤖 Agent detected task… preparing claim… 🍄', 'info');
   let secs = Math.ceil(AGENT_DELAY_MS / 1000);
-
   const taskCard = document.querySelector(`[data-task-id="${task1069.id}"]`);
   if (taskCard) {
     const status = taskCard.querySelector('.event-status');
@@ -480,21 +450,16 @@ function triggerAgentCountdown(task1069) {
       if (secs <= 0) clearInterval(tick);
     }, 1000);
   }
-
   setTimeout(() => post1070(task1069), AGENT_DELAY_MS);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Kind 1070 — Completion Claim (Agent)
- // ─────────────────────────────────────────────────────────────────────────────
+// Kind 1070 — Completion Claim
+// ─────────────────────────────────────────────────────────────────────────────
 async function post1070(task1069) {
   if (!agentSk) { log('Agent key not ready', 'error'); return; }
-
-  // Proof image: use a real hosted image on the paradox-primitive repo
-  // Replace this URL with your actual poc/proof.jpg once uploaded
   const proofUrl = 'https://paradoxyou.github.io/paradox-primitive/poc/proof.jpg';
-  const nonce    = Math.random().toString(36).slice(2, 18);
-
+  const nonce = Math.random().toString(36).slice(2, 18);
   const event = finalizeEvent({
     kind: 1070,
     content: 'Task complete. Proof attached. Resolve the paradox ⚡🍄',
@@ -503,30 +468,28 @@ async function post1070(task1069) {
       ['e', task1069.id, '', 'root'],
       ['p', task1069.pubkey],
       ['proof', 'type', 'image'],
-      ['proof', 'url', proofUrl'],
-      ['proof', 'sha256', 'a'.repeat(64)], // placeholder — real impl hashes the image
+      ['proof', 'url', proofUrl],
+      ['proof', 'sha256', 'a'.repeat(64)],
       ['nonce', nonce],
       ['agent', 'model', 'paradox-agent-v0.1'],
     ]
   }, agentSk);
-
   try {
     await Promise.any(pool.publish(RELAYS, event));
     openClaims[event.id] = { claim: event, taskId: task1069.id };
     log(`🤖 Kind 1070 claim posted! ID: ${event.id.slice(0,12)}…`, 'success');
     renderClaims();
-    renderTasks(); // Update task status
+    renderTasks();
   } catch(e) {
     log(`Agent claim failed: ${e.message}`, 'error');
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
- // Kind 1071 — Acceptance + Payment
+// Kind 1071 — Acceptance + Payment
 // ─────────────────────────────────────────────────────────────────────────────
 async function verify1071(claimId) {
   if (!userSk) { log('Set up keys first', 'error'); return; }
-
   const data = openClaims[claimId];
   if (!data) return;
   const { claim, taskId } = data;
@@ -534,31 +497,24 @@ async function verify1071(claimId) {
   const bountyMsats = task
     ? parseInt((task.tags.find(t => t[0] === 'amount') || ['','0'])[1] || '0')
     : 0;
-
   const event = finalizeEvent({
     kind: 1071,
     content: 'Accepted. Proof verified. Paradox resolved. ⚡🍄',
     created_at: Math.floor(Date.now() / 1000),
     tags: [
       ['e', claim.id, '', 'reply'],
-      ['e', taskId, '',  'root'],
+      ['e', taskId, '', 'root'],
       ['p', claim.pubkey],
       ['payment', 'status', 'sent'],
     ]
   }, userSk);
-
   $('status-claim-' + claimId).textContent = 'Resolving…';
-
   try {
     await Promise.any(pool.publish(RELAYS, event));
     log('✅ Kind 1071 published — paradox resolved 🍄!', 'success');
-
-    // ── Payment ──────────────────────────────────────────────────
     const invoice = $('inp-invoice').value.trim();
     const simulate = $('simulate-mode').checked;
-
     if (simulate) {
-      // Simulated payment
       if (bountyMsats > 0) {
         simBalance = Math.max(0, simBalance - bountyMsats);
         setBalanceDisplay(simBalance);
@@ -566,7 +522,6 @@ async function verify1071(claimId) {
       }
       $('status-claim-' + claimId).innerHTML = '<span style="color:#F59E0B">Simulated 🍄</span>';
     } else if (nwcClient && bountyMsats > 0) {
-      // Real payment
       log(`⚡ Sending ${Math.floor(bountyMsats/1000)} sats via NWC…`, 'info');
       try {
         const result = await nwcClient.payInvoice({ invoice });
@@ -578,14 +533,12 @@ async function verify1071(claimId) {
       } catch(e) {
         log(`Payment error: ${e.message}`, 'error');
         $('status-claim-' + claimId).innerHTML = '<span style="color:#EF4444">Payment failed</span>';
-        return; // Don't resolve if payment fails
+        return;
       }
     } else {
       log('No wallet or invoice — payment skipped', 'warn');
       $('status-claim-' + claimId).innerHTML = '<span style="color:#F59E0B">Skipped 🍄</span>';
     }
-
-    // Bookkeeping
     const summary = {
       task: task?.content?.slice(0, 60) || 'Unknown task',
       sats: Math.floor(bountyMsats / 1000),
@@ -594,29 +547,25 @@ async function verify1071(claimId) {
     resolved.push(summary);
     delete openTasks[taskId];
     delete openClaims[claimId];
-
     renderTasks();
     renderClaims();
     renderResolved();
     showFireworks();
-
   } catch(e) {
     log(`Failed to publish 1071: ${e.message}`, 'error');
     $('status-claim-' + claimId).innerHTML = '<span style="color:#EF4444">Failed</span>';
   }
 }
-
 function reject1070(claimId) {
   delete openClaims[claimId];
   log('❌ Claim rejected. Paradox unresolved 🍄💀', 'warn');
   renderClaims();
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
- // Render helpers
+// Render helpers
 // ─────────────────────────────────────────────────────────────────────────────
 function renderTasks() {
-  const el    = $('tasks-list');
+  const el = $('tasks-list');
   const tasks = Object.values(openTasks);
   if (!tasks.length) {
     el.innerHTML = '<p class="empty">No open tasks yet.</p>'; return;
@@ -639,9 +588,8 @@ function renderTasks() {
       </div>`;
   }).join('');
 }
-
 function renderClaims() {
-  const el     = $('claims-list');
+  const el = $('claims-list');
   const claims = Object.values(openClaims);
   if (!claims.length) {
     el.innerHTML = '<p class="empty">No pending claims.</p>'; return;
@@ -667,7 +615,6 @@ function renderClaims() {
       </div>`;
   }).join('');
 }
-
 function renderResolved() {
   const el = $('resolved-list');
   if (!resolved.length) {
@@ -683,37 +630,32 @@ function renderResolved() {
       </div>
     </div>`).join('');
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
- // Balance polling (every 60s if wallet connected)
- // ─────────────────────────────────────────────────────────────────────────────
+// Balance polling
+// ─────────────────────────────────────────────────────────────────────────────
 setInterval(async () => {
   if (!nwcClient) return;
   try {
     const info = await nwcClient.getBalance();
-    simBalance  = info.balance;
+    simBalance = info.balance;
     setBalanceDisplay(simBalance);
   } catch(_) {}
 }, 60_000);
-
 // ─────────────────────────────────────────────────────────────────────────────
- // Expose to global (needed for onclick in rendered HTML)
- // ─────────────────────────────────────────────────────────────────────────────
-window._verify       = verify1071;
-window._reject       = reject1070;
-window.setupKeys     = setupKeys;
+// Expose to global
+// ─────────────────────────────────────────────────────────────────────────────
+window._verify = verify1071;
+window._reject = reject1070;
+window.setupKeys = setupKeys;
 window.connectWallet = connectWallet;
-window.post1069      = post1069;
-
+window.post1069 = post1069;
 // ─────────────────────────────────────────────────────────────────────────────
- // Init
+// Init
 // ─────────────────────────────────────────────────────────────────────────────
 (function init() {
-  // Restore NWC URL from session if available
   const saved = sessionStorage.getItem('nwc_url');
   if (saved) $('inp-nwc').value = saved;
-
-  loadOrCreateAgentKey(); // ← replaces the old agentSk lines in setupKeys()
+  loadOrCreateAgentKey();
   setupKeys();
   setBalanceDisplay(simBalance);
   renderTasks();
@@ -721,6 +663,5 @@ window.post1069      = post1069;
   renderResolved();
 })();
 </script>
-
 </body>
 </html>
