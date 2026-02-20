@@ -485,6 +485,7 @@ async function post1070(task1069) {
 // ─────────────────────────────────────────────────────────────────────────────
 async function verify1071(claimId) {
   if (!userSk) { log('Set up keys first', 'error'); return; }
+
   const data = openClaims[claimId];
   if (!data) return;
   const { claim, taskId } = data;
@@ -492,6 +493,7 @@ async function verify1071(claimId) {
   const bountyMsats = task
     ? parseInt((task.tags.find(t => t[0] === 'amount') || ['','0'])[1] || '0')
     : 0;
+
   const event = finalizeEvent({
     kind: 1071,
     content: 'Accepted. Proof verified. Paradox resolved. ⚡🍄',
@@ -503,14 +505,18 @@ async function verify1071(claimId) {
       ['payment', 'status', 'sent'],
     ]
   }, userSk);
+
   const statusEl = $('status-claim-' + claimId);
   if (statusEl) statusEl.textContent = 'Resolving…';
+
   try {
     await Promise.any(pool.publish(RELAYS, event));
     log('✅ Kind 1071 published — paradox resolved 🍄!', 'success');
+
     const invoiceInput = $('inp-invoice');
     const invoice = invoiceInput ? invoiceInput.value.trim() : '';
     const simulate = $('simulate-mode').checked;
+
     if (simulate) {
       if (bountyMsats > 0) {
         simBalance = Math.max(0, simBalance - bountyMsats);
@@ -541,8 +547,12 @@ async function verify1071(claimId) {
             throw new Error('No invoice returned from LNURL');
           }
         }
+
         const result = await nwcClient.payInvoice({ invoice: invoiceToPay });
-        log(`💸 Paid! Preimage: ${result.preimage?.slice(0,20)}… 🍄`, 'success');
+        // Null-safe preimage logging
+        const preimageSnippet = result.preimage ? result.preimage.slice(0,20) + '…' : 'No preimage returned';
+        log(`💸 Paid! Preimage: ${preimageSnippet} 🍄`, 'success');
+
         const info = await nwcClient.getBalance();
         simBalance = info.balance;
         setBalanceDisplay(simBalance);
@@ -556,6 +566,7 @@ async function verify1071(claimId) {
       log('No wallet or bounty — payment skipped 🍄', 'warn');
       if (statusEl) statusEl.innerHTML = '<span style="color:#F59E0B">Skipped 🍄</span>';
     }
+
     const summary = {
       task: task?.content?.slice(0, 60) || 'Unknown task',
       sats: Math.floor(bountyMsats / 1000),
@@ -564,6 +575,7 @@ async function verify1071(claimId) {
     resolved.push(summary);
     delete openTasks[taskId];
     delete openClaims[claimId];
+
     renderTasks();
     renderClaims();
     renderResolved();
@@ -573,7 +585,7 @@ async function verify1071(claimId) {
     if (statusEl) statusEl.innerHTML = '<span style="color:#EF4444">Failed</span>';
   }
 }
-function reject1070(claimId) {
+ function reject1070(claimId) {
   delete openClaims[claimId];
   log('❌ Claim rejected. Paradox unresolved 🍄💀', 'warn');
   renderClaims();
