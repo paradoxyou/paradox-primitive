@@ -79,7 +79,7 @@
       margin-bottom: 4px;
     }
     button:hover { opacity: 0.82; }
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; background: #4a4a4a; }
     .btn-purple { background: #7C3AED; color: white; }
     .btn-green { background: #10B981; color: white; margin-right: 8px; }
     .btn-red { background: #EF4444; color: white; }
@@ -137,9 +137,17 @@
       color: #9CA3AF; font-size: 0.75rem;
     }
     .toggle-label { color: #9CA3AF; font-size: 0.78rem; margin-top: 6px; }
+    #loading-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(2, 3, 9, 0.8);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999; color: #00F5FF; font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
+
+<div id="loading-overlay">Loading Paradox POC… 🍄⚡</div>
 
 <div id="balance-display">User: ⚡ 0 sats<br>Agent: ⚡ 0 sats (simulated)</div>
 <div id="fireworks"></div>
@@ -193,7 +201,7 @@
       <div class="panel">
         <h2>📋 Live Event Log</h2>
         <div id="log">
-          <div class="log-line log-info">Paradox POC loaded 🍄. Set up keys to begin.</div>
+          <div class="log-line log-info">Paradox POC loading… 🍄</div>
         </div>
       </div>
 
@@ -209,7 +217,7 @@
         <input id="inp-bounty" type="number" min="0" value="21" title="Adjust bounty sats" />
         <label for="inp-exp" style="font-size:0.75rem;color:#9CA3AF;margin-bottom:4px;display:block;">Expires in hours (default 24)</label>
         <input id="inp-exp" type="number" min="1" value="24" title="Adjust expiration hours" />
-        <button id="btn-post" onclick="post1069()">
+        <button id="btn-post" disabled onclick="post1069()">
           Post Kind 1069 Task ⚡
         </button>
         <div id="status-post" class="status-line"></div>
@@ -328,16 +336,20 @@ function showFireworks() {
 // Keys (persistent agent via localStorage)
 // ─────────────────────────────────────────────────────────────────────────────
 function loadOrCreateAgentKey() {
-  const stored = localStorage.getItem('paradox_agent_sk');
-  if (stored) {
-    agentSk = hexToBytes(stored);
-  } else {
-    agentSk = generateSecretKey();
-    localStorage.setItem('paradox_agent_sk', 
-      Array.from(agentSk).map(b => b.toString(16).padStart(2,'0')).join(''));
+  try {
+    const stored = localStorage.getItem('paradox_agent_sk');
+    if (stored) {
+      agentSk = hexToBytes(stored);
+    } else {
+      agentSk = generateSecretKey();
+      localStorage.setItem('paradox_agent_sk', 
+        Array.from(agentSk).map(b => b.toString(16).padStart(2,'0')).join(''));
+    }
+    agentPk = getPublicKey(agentSk);
+    log(`Agent key loaded. Pubkey: ${agentPk.slice(0,16)}… (persistent)`, 'info');
+  } catch(e) {
+    log(`Agent key load failed: ${e.message}`, 'error');
   }
-  agentPk = getPublicKey(agentSk);
-  log(`Agent key loaded. Pubkey: ${agentPk.slice(0,16)}… (persistent)`, 'info');
 }
 
 function setupKeys() {
@@ -357,6 +369,8 @@ function setupKeys() {
       `You: ${userPk.slice(0,16)}… &nbsp;·&nbsp; Agent: ${agentPk.slice(0,16)}…` +
       `</span>`;
     log(`Keys ready. Your pubkey: ${userPk.slice(0,16)}…`, 'success');
+    // Enable buttons after keys are set
+    $('btn-post').disabled = false;
   } catch(e) {
     $('status-keys').innerHTML = `<span style="color:#EF4444">❌ ${e.message}</span>`;
     log(e.message, 'error');
@@ -465,7 +479,7 @@ async function post1070(task1069) {
       ['e', task1069.id, '', 'root'],
       ['p', task1069.pubkey],
       ['proof', 'type', 'image'],
-      ['proof', 'url', proofUrl'],
+      ['proof', 'url', proofUrl],
       ['proof', 'sha256', 'a'.repeat(64)],
       ['nonce', nonce],
       ['agent', 'model', 'paradox-agent-v0.1'],
@@ -545,7 +559,6 @@ async function verify1071(claimId) {
           }
         }
         const result = await nwcClient.payInvoice({ invoice: invoiceToPay });
-        // Null-safe preimage + success check
         const preimageSnippet = result.preimage ? result.preimage.slice(0,20) + '…' : '(no preimage returned)';
         log(`💸 Paid! Preimage: ${preimageSnippet} 🍄`, 'success');
         const info = await nwcClient.getBalance();
@@ -679,7 +692,7 @@ window.post1069 = post1069;
 // ─────────────────────────────────────────────────────────────────────────────
 // Init
 // ─────────────────────────────────────────────────────────────────────────────
-(function init() {
+window.addEventListener('load', function init() {
   const saved = sessionStorage.getItem('nwc_url');
   if (saved) $('inp-nwc').value = saved;
   loadOrCreateAgentKey();
@@ -688,7 +701,8 @@ window.post1069 = post1069;
   renderTasks();
   renderClaims();
   renderResolved();
-})();
+  document.getElementById('loading-overlay').style.display = 'none';
+});
 </script>
 </body>
 </html>
