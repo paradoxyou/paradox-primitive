@@ -8,7 +8,7 @@
 Posts real Nostr events. Verifiable on any client. Optional real Lightning payments via NWC.
 
 ## Spec
-Full NIP specification at [paradoxyou.ju.mp](https://paradoxyou.ju.mp)
+Full NIP specification at [paradox.you](https://paradox.you)
 
 ## Status
 `Draft` — seeking feedback and implementers. Kind numbers: 1069 / 1070 / 1071.
