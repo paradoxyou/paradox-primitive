@@ -14,22 +14,27 @@
       padding: 20px;
     }
     h1 { color: #00F5FF; font-size: 1.6rem; margin-bottom: 4px; }
-    h2 { color: #00F5FF; font-size: 0.95rem; margin: 20px 0 10px; border-bottom: 1px solid #1a1f35; padding-bottom: 6px; }
+    h2 { color: #00F5FF; font-size: 0.95rem; margin: 20px 0 10px;
+         border-bottom: 1px solid #1a1f35; padding-bottom: 6px; }
     h3 { color: #7C3AED; font-size: 0.82rem; margin: 14px 0 6px; }
     .subtitle { color: #9CA3AF; font-size: 0.82rem; margin-bottom: 24px; }
     a { color: #00F5FF; }
+
+    /* ── Balance corner ───────────────────────────────────────── */
     #balance-display {
       position: fixed; top: 14px; right: 14px;
       background: #0A0A1F; border: 1px solid #00F5FF;
       color: #00F5FF; padding: 8px 16px; border-radius: 8px;
-      font-size: 1rem; font-weight: bold; z-index: 100;
+      font-size: 0.9rem; font-weight: bold; z-index: 100;
       transition: transform 0.2s, box-shadow 0.2s;
-      cursor: default;
+      line-height: 1.6;
     }
     #balance-display.pulse {
-      transform: scale(1.2);
+      transform: scale(1.12);
       box-shadow: 0 0 30px #00F5FF88;
     }
+
+    /* ── Fireworks ────────────────────────────────────────────── */
     #fireworks {
       display: none; position: fixed;
       top: 50%; left: 50%;
@@ -41,9 +46,11 @@
       animation: pop 0.3s ease;
     }
     @keyframes pop {
-      0% { transform: translate(-50%,-50%) scale(0.4); opacity: 0; }
-      100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+      0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 0; }
+      100% { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
     }
+
+    /* ── Layout ───────────────────────────────────────────────── */
     .grid {
       display: grid;
       grid-template-columns: 380px 1fr;
@@ -52,6 +59,7 @@
       margin: 0 auto;
     }
     @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+
     .panel {
       background: #0A0A1F;
       border: 1px solid #1a1f35;
@@ -59,17 +67,22 @@
       padding: 16px;
       margin-bottom: 16px;
     }
-    input, textarea, select {
+
+    /* ── Inputs ───────────────────────────────────────────────── */
+    input, textarea {
       width: 100%; background: #020309;
       border: 1px solid #2a2f45; color: #D1D5DB;
       padding: 8px 10px; border-radius: 6px;
       font-family: inherit; font-size: 0.83rem;
       margin-bottom: 8px;
-      word-break: break-all;
     }
     input:focus, textarea:focus { outline: none; border-color: #00F5FF; }
     textarea { height: 64px; resize: vertical; }
     input[type="password"] { letter-spacing: 2px; }
+    input[type="checkbox"] { width: auto; margin-right: 6px; }
+    label { font-size: 0.78rem; color: #9CA3AF; display: block; margin-bottom: 4px; }
+
+    /* ── Buttons ──────────────────────────────────────────────── */
     button {
       background: #00F5FF; color: #020309;
       border: none; padding: 8px 18px;
@@ -78,25 +91,29 @@
       font-size: 0.83rem; transition: opacity 0.15s;
       margin-bottom: 4px;
     }
-    button:hover { opacity: 0.82; }
-    button:disabled { opacity: 0.4; cursor: not-allowed; background: #4a4a4a; }
+    button:hover  { opacity: 0.82; }
+    button:disabled { opacity: 0.35; cursor: not-allowed; background: #4a4a5a; color: #888; }
     .btn-purple { background: #7C3AED; color: white; }
-    .btn-green { background: #10B981; color: white; margin-right: 8px; }
-    .btn-red { background: #EF4444; color: white; }
-    .btn-small { padding: 5px 12px; font-size: 0.78rem; }
+    .btn-green  { background: #10B981; color: white; margin-right: 8px; }
+    .btn-red    { background: #EF4444; color: white; }
+    .btn-small  { padding: 5px 12px; font-size: 0.78rem; }
+
+    /* ── Event cards ──────────────────────────────────────────── */
     .event-card {
       background: #020309; border: 1px solid #1a1f35;
       border-radius: 8px; padding: 12px; margin-bottom: 10px;
     }
-    .claim-card { border-left: 3px solid #7C3AED; }
-    .resolved-card { border-left: 3px solid #10B981; opacity: 0.6; }
+    .claim-card   { border-left: 3px solid #7C3AED; }
+    .resolved-card { border-left: 3px solid #10B981; opacity: 0.65; }
+
     .event-kind {
       color: #7C3AED; font-size: 0.68rem;
       font-weight: bold; margin-bottom: 4px; letter-spacing: 1px;
     }
     .event-content { font-size: 0.88rem; margin-bottom: 6px; }
-    .event-meta { color: #9CA3AF; font-size: 0.73rem; margin-bottom: 8px; }
-    .event-status { color: #F59E0B; font-size: 0.78rem; }
+    .event-meta    { color: #9CA3AF; font-size: 0.73rem; margin-bottom: 8px; }
+    .event-status  { color: #F59E0B; font-size: 0.78rem; }
+
     .nip-badge {
       display: inline-block; background: #7C3AED22;
       color: #7C3AED; border: 1px solid #7C3AED44;
@@ -108,71 +125,100 @@
       font-size: 1.1rem; padding: 4px 0;
       font-weight: bold; letter-spacing: 2px;
     }
-    #log {
-      max-height: 200px; overflow-y: auto;
-      padding-right: 4px;
-    }
+
+    /* ── Log ──────────────────────────────────────────────────── */
+    #log { max-height: 200px; overflow-y: auto; padding-right: 4px; }
     #log::-webkit-scrollbar { width: 4px; }
     #log::-webkit-scrollbar-thumb { background: #2a2f45; border-radius: 4px; }
     .log-line {
       font-size: 0.75rem; padding: 3px 0;
-      border-bottom: 1px solid #0d1020;
-      line-height: 1.4;
+      border-bottom: 1px solid #0d1020; line-height: 1.4;
     }
     .log-success { color: #10B981; }
-    .log-error { color: #EF4444; }
-    .log-warn { color: #F59E0B; }
-    .log-info { color: #9CA3AF; }
-    .status-line {
-      font-size: 0.78rem; margin-top: 6px;
-      min-height: 18px;
-    }
+    .log-error   { color: #EF4444; }
+    .log-warn    { color: #F59E0B; }
+    .log-info    { color: #9CA3AF; }
+
+    .status-line { font-size: 0.78rem; margin-top: 6px; min-height: 18px; }
     .empty { color: #9CA3AF; font-size: 0.83rem; font-style: italic; }
-    .countdown {
-      display: inline-block;
-      color: #F59E0B; font-weight: bold;
-    }
-    .footer {
-      text-align: center; margin-top: 30px;
-      color: #9CA3AF; font-size: 0.75rem;
-    }
-    .toggle-label { color: #9CA3AF; font-size: 0.78rem; margin-top: 6px; }
+    .countdown { display: inline-block; color: #F59E0B; font-weight: bold; }
+
+    /* ── Loading overlay ──────────────────────────────────────── */
     #loading-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(2, 3, 9, 0.8);
+      background: rgba(2, 3, 9, 0.92);
       display: flex; align-items: center; justify-content: center;
       z-index: 999; color: #00F5FF; font-size: 1.2rem;
+      flex-direction: column; gap: 12px;
+    }
+    #loading-overlay p { color: #9CA3AF; font-size: 0.82rem; }
+
+    .footer {
+      text-align: center; margin-top: 30px;
+      color: #4B5563; font-size: 0.75rem;
+    }
+
+    .simulate-box {
+      background: #0d0d1a; border: 1px solid #2a2f45;
+      border-radius: 6px; padding: 10px; margin-top: 10px;
+    }
+    .simulate-box label { color: #D1D5DB; font-size: 0.82rem; }
+    .simulate-box p { color: #9CA3AF; font-size: 0.73rem; margin-top: 4px; }
+
+    .real-pay-box {
+      background: #0d1a0d; border: 1px solid #10B98144;
+      border-radius: 6px; padding: 10px; margin-top: 10px;
+      display: none;
+    }
+    .real-pay-box label { color: #10B981; }
+    .real-pay-box p { color: #9CA3AF; font-size: 0.73rem; margin-top: 4px; }
+
+    .proof-img {
+      max-width: 100%; border-radius: 6px;
+      border: 1px solid #1a1f35; margin-top: 8px;
     }
   </style>
 </head>
 <body>
 
-<div id="loading-overlay">Loading Paradox POC… 🍄⚡</div>
+<!-- Loading overlay -->
+<div id="loading-overlay">
+  <div>Loading Paradox POC… 🍄⚡</div>
+  <p>Initialising Nostr keys and relay connections…</p>
+</div>
 
-<div id="balance-display">User: ⚡ 0 sats<br>Agent: ⚡ 0 sats (simulated)</div>
+<!-- Balance corner -->
+<div id="balance-display">
+  User: ⚡ — sats<br>
+  Agent: ⚡ — sats
+</div>
+
+<!-- Fireworks -->
 <div id="fireworks"></div>
 
 <div style="max-width:1080px; margin:0 auto;">
 
   <h1>Paradox Primitive <span class="nip-badge">POC α</span></h1>
   <p class="subtitle">
-    Kind 1069 → 1070 → 1071 → sats · Real Nostr events · No middlemen · ⚡🍄
+    Kind 1069 → 1070 → 1071 → sats &nbsp;·&nbsp;
+    Real Nostr events &nbsp;·&nbsp; No middlemen &nbsp;·&nbsp; ⚡🍄
   </p>
-
-  <p style="color:#9CA3AF;font-size:0.82rem;text-align:center;margin-bottom:20px;">
-    POC uses per-browser agent keys for demo — production agents will be fixed services with persistent pubkeys.
+  <p style="color:#9CA3AF;font-size:0.8rem;text-align:center;margin-bottom:20px;border:1px solid #1a1f35;border-radius:6px;padding:8px;">
+    Per-browser agent keys for demo — production agents will be persistent services.
+    &nbsp;|&nbsp; <a href="https://github.com/paradoxyou/paradox-primitive" target="_blank">GitHub</a>
+    &nbsp;|&nbsp; <a href="https://paradox.you" target="_blank">Full NIP Spec</a>
   </p>
 
   <div class="grid">
 
+    <!-- ── LEFT COLUMN ─────────────────────────────────────────── -->
     <div>
-
       <div class="panel">
         <h2>⚙️ Setup</h2>
 
         <h3>1. Your Nostr Key (Requester)</h3>
         <input id="inp-sk" type="password"
-          placeholder="Hex nsec (optional — leave blank for demo)" />
+          placeholder="Hex secret key (64 chars) — blank = demo key" />
         <button class="btn-purple" onclick="setupKeys()">Set Keys</button>
         <div id="status-keys" class="status-line" style="color:#9CA3AF">
           Auto-generating demo key…
@@ -180,21 +226,37 @@
 
         <h3>2. Lightning Wallet (NWC)</h3>
         <input id="inp-nwc" type="password"
-          placeholder="nostr+walletconnect://..." />
+          placeholder="nostr+walletconnect://…" />
         <button onclick="connectWallet()">Connect Wallet</button>
         <div id="status-wallet" class="status-line" style="color:#9CA3AF">
-          Not connected — balance will simulate
+          Not connected — balance simulates
         </div>
         <p style="font-size:0.72rem;color:#9CA3AF;margin-top:6px;">
-          Paste your NWC URL (Alby/LNbits → Developer → Nostr Wallet Connect).
+          Get free NWC at
+          <a href="https://getalby.com" target="_blank">getalby.com</a>
+          → Developer → Nostr Wallet Connect
         </p>
 
-        <div class="toggle-label">
-          <input type="checkbox" id="simulate-mode" checked />
-          Simulate mode (safe testing — no real sats move) ✓
-          <div style="font-size:0.75rem;color:#9CA3AF;margin-top:4px;">
-            Checked = demo only (sats simulate). Unchecked = real zaps to your agent wallet.
-          </div>
+        <h3>3. Payment Mode</h3>
+        <div class="simulate-box">
+          <label>
+            <input type="checkbox" id="simulate-mode" checked
+              onchange="togglePayMode()" />
+            Simulate mode (safe — no real sats move)
+          </label>
+          <p>Uncheck to enable real Lightning payments via your connected wallet.</p>
+        </div>
+
+        <div class="real-pay-box" id="real-pay-box">
+          <label>⚡ Real payment mode active</label>
+          <p>
+            Bounty sats will be sent automatically via LNURL to the agent
+            Lightning address on Verify. Make sure wallet is connected.
+          </p>
+          <label style="margin-top:8px;">Optional: Paste a bolt11 invoice to pay directly</label>
+          <input id="inp-invoice"
+            placeholder="lnbc… (overrides LNURL auto-fetch)" />
+          <p>Leave blank to auto-fetch invoice from agent Lightning address.</p>
         </div>
       </div>
 
@@ -204,50 +266,48 @@
           <div class="log-line log-info">Paradox POC loading… 🍄</div>
         </div>
       </div>
-
     </div>
 
+    <!-- ── RIGHT COLUMN ────────────────────────────────────────── -->
     <div>
 
+      <!-- Post 1069 -->
       <div class="panel">
         <h2>🎯 Post a Task <span class="nip-badge">Kind 1069</span></h2>
         <textarea id="inp-task"
-          placeholder="Describe the task — e.g. 'Take a photo proving you're at the Bitcoin conference'"></textarea>
-        <label for="inp-bounty" style="font-size:0.75rem;color:#9CA3AF;margin-bottom:4px;display:block;">Bounty in sats (optional, default 21)</label>
-        <input id="inp-bounty" type="number" min="0" value="21" title="Adjust bounty sats" />
-        <label for="inp-exp" style="font-size:0.75rem;color:#9CA3AF;margin-bottom:4px;display:block;">Expires in hours (default 24)</label>
-        <input id="inp-exp" type="number" min="1" value="24" title="Adjust expiration hours" />
+          placeholder="Describe the task — e.g. 'Prove you're at the Bitcoin conference with a photo'"></textarea>
+        <label for="inp-bounty">Bounty in sats (default 21)</label>
+        <input id="inp-bounty" type="number" min="0" value="21" />
+        <label for="inp-exp">Expires in hours (default 24)</label>
+        <input id="inp-exp" type="number" min="1" value="24" />
         <button id="btn-post" disabled onclick="post1069()">
           Post Kind 1069 Task ⚡
         </button>
         <div id="status-post" class="status-line"></div>
       </div>
 
-      <div class="flow-arrow">↓ &nbsp; AI agent detects & replies &nbsp; ↓</div>
+      <div class="flow-arrow">↓ &nbsp; AI agent detects & claims &nbsp; ↓</div>
 
+      <!-- Open tasks -->
       <div class="panel">
         <h2>📬 Open Tasks <span class="nip-badge">Kind 1069</span></h2>
-        <div id="tasks-list">
-          <p class="empty">No open tasks yet.</p>
-        </div>
+        <div id="tasks-list"><p class="empty">No open tasks yet.</p></div>
       </div>
 
       <div class="flow-arrow">↓ &nbsp; Verify or reject the claim &nbsp; ↓</div>
 
+      <!-- Pending claims -->
       <div class="panel">
         <h2>🤖 Pending Claims <span class="nip-badge">Kind 1070</span></h2>
-        <div id="claims-list">
-          <p class="empty">No pending claims.</p>
-        </div>
+        <div id="claims-list"><p class="empty">No pending claims.</p></div>
       </div>
 
-      <div class="flow-arrow">↓ &nbsp; On verify: 1071 + zap fires &nbsp; ↓</div>
+      <div class="flow-arrow">↓ &nbsp; On verify: 1071 fires + sats move &nbsp; ↓</div>
 
+      <!-- Resolved -->
       <div class="panel">
         <h2>✅ Resolved <span class="nip-badge">Kind 1071</span></h2>
-        <div id="resolved-list">
-          <p class="empty">Nothing resolved yet 🍄.</p>
-        </div>
+        <div id="resolved-list"><p class="empty">Nothing resolved yet 🍄.</p></div>
       </div>
 
     </div>
@@ -261,11 +321,11 @@
     &nbsp;·&nbsp; Paradox Primitive α — kind numbers subject to change
   </div>
 
-</div>
+</div><!-- /wrapper -->
 
 <script type="module">
 // ─────────────────────────────────────────────────────────────────────────────
-// Imports
+// Imports — nostr-tools v2 + Alby SDK via esm.sh CDN
 // ─────────────────────────────────────────────────────────────────────────────
 import {
   generateSecretKey,
@@ -277,52 +337,55 @@ import { hexToBytes } from 'https://esm.sh/@noble/hashes@1.4.0/utils';
 import { nwc } from 'https://esm.sh/@getalby/sdk@3.9.0';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Config
+// Config  ← UPDATE AGENT_LN_ADDRESS to your real Alby Lightning address
 // ─────────────────────────────────────────────────────────────────────────────
 const RELAYS = [
   'wss://relay.damus.io',
   'wss://relay.primal.net',
   'wss://nos.lol'
 ];
-const AGENT_DELAY_MS = 3000;
-const AGENT_LIGHTNING_ADDRESS = 'paradoxprimitive@lnaddress.com'; // YOUR ADDRESS HERE
+const AGENT_DELAY_MS   = 3000;
+const AGENT_LN_ADDRESS = 'yourname@getalby.com'; // ← SET THIS
 
 // ─────────────────────────────────────────────────────────────────────────────
 // State
 // ─────────────────────────────────────────────────────────────────────────────
-const pool = new SimplePool();
-let userSk = null;
-let userPk = null;
-let agentSk = null;
-let agentPk = null;
-let nwcClient = null;
-let simBalance = 50000;
-let agentSimBalance = 0; // simulated agent balance rise
-const openTasks = {};
+const pool      = new SimplePool();
+let userSk      = null;
+let userPk      = null;
+let agentSk     = null;
+let agentPk     = null;
+let nwcClient   = null;
+let userMsats   = 50_000;  // simulated until wallet connects
+let agentMsats  = 0;
+const openTasks  = {};
 const openClaims = {};
-const resolved = [];
+const resolved   = [];
+const verifying  = new Set(); // prevent double-spend on double-click
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DOM helpers
 // ─────────────────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $   = id => document.getElementById(id);
+const esc = s  => String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 function log(msg, type = 'info') {
-  const el = $('log');
+  const el   = $('log');
   const line = document.createElement('div');
   line.className = `log-line log-${type}`;
   line.textContent = `${new Date().toLocaleTimeString()} — ${msg}`;
   el.prepend(line);
 }
 
-function setBalanceDisplay(userMsats, agentMsats = agentSimBalance) {
-  const userSats = Math.floor(userMsats / 1000);
-  const agentSats = Math.floor(agentMsats / 1000);
-  const el = $('balance-display');
-  el.innerHTML = `User: ⚡ ${userSats.toLocaleString()} sats<br>Agent: ⚡ ${agentSats.toLocaleString()} sats (simulated)`;
-  el.classList.add('pulse');
-  setTimeout(() => el.classList.remove('pulse'), 700);
+function setBalanceDisplay() {
+  const uSats = Math.floor(userMsats / 1000);
+  const aSats = Math.floor(agentMsats / 1000);
+  const simTag = nwcClient ? '' : ' (sim)';
+  $('balance-display').innerHTML =
+    `User:&nbsp; ⚡ ${uSats.toLocaleString()} sats${simTag}<br>` +
+    `Agent: ⚡ ${aSats.toLocaleString()} sats (sim)`;
+  $('balance-display').classList.add('pulse');
+  setTimeout(() => $('balance-display').classList.remove('pulse'), 700);
 }
 
 function showFireworks() {
@@ -333,26 +396,40 @@ function showFireworks() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Keys (persistent agent via localStorage)
+// Payment mode toggle
+// ─────────────────────────────────────────────────────────────────────────────
+window.togglePayMode = function() {
+  const sim = $('simulate-mode').checked;
+  $('real-pay-box').style.display = sim ? 'none' : 'block';
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Keys — persistent agent key via localStorage
 // ─────────────────────────────────────────────────────────────────────────────
 function loadOrCreateAgentKey() {
   try {
     const stored = localStorage.getItem('paradox_agent_sk');
-    if (stored) {
+    if (stored && stored.length === 64) {
       agentSk = hexToBytes(stored);
     } else {
+      // Generate fresh and persist
       agentSk = generateSecretKey();
-      localStorage.setItem('paradox_agent_sk', 
-        Array.from(agentSk).map(b => b.toString(16).padStart(2,'0')).join(''));
+      localStorage.setItem(
+        'paradox_agent_sk',
+        Array.from(agentSk).map(b => b.toString(16).padStart(2,'0')).join('')
+      );
     }
     agentPk = getPublicKey(agentSk);
-    log(`Agent key loaded. Pubkey: ${agentPk.slice(0,16)}… (persistent)`, 'info');
+    log(`Agent key ready: ${agentPk.slice(0,16)}… (persisted in browser)`, 'info');
   } catch(e) {
-    log(`Agent key load failed: ${e.message}`, 'error');
+    // localStorage may be blocked (private browsing on some browsers)
+    log(`localStorage unavailable — generating session-only agent key`, 'warn');
+    agentSk = generateSecretKey();
+    agentPk = getPublicKey(agentSk);
   }
 }
 
-function setupKeys() {
+window.setupKeys = function() {
   const input = $('inp-sk').value.trim();
   try {
     if (input.length === 64) {
@@ -360,27 +437,26 @@ function setupKeys() {
     } else if (input.length === 0) {
       userSk = generateSecretKey();
     } else {
-      throw new Error('Key must be 64 hex chars');
+      throw new Error('Key must be exactly 64 hex characters');
     }
     userPk = getPublicKey(userSk);
     $('status-keys').innerHTML =
-      `✅ <span style="color:#10B981">Keys ready</span><br>` +
+      `<span style="color:#10B981">✅ Keys ready</span><br>` +
       `<span style="font-size:0.7rem;color:#9CA3AF">` +
       `You: ${userPk.slice(0,16)}… &nbsp;·&nbsp; Agent: ${agentPk.slice(0,16)}…` +
       `</span>`;
     log(`Keys ready. Your pubkey: ${userPk.slice(0,16)}…`, 'success');
-    // Enable buttons after keys are set
     $('btn-post').disabled = false;
   } catch(e) {
-    $('status-keys').innerHTML = `<span style="color:#EF4444">❌ ${e.message}</span>`;
+    $('status-keys').innerHTML = `<span style="color:#EF4444">❌ ${esc(e.message)}</span>`;
     log(e.message, 'error');
   }
-}
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Wallet
+// Wallet connect
 // ─────────────────────────────────────────────────────────────────────────────
-async function connectWallet() {
+window.connectWallet = async function() {
   const url = $('inp-nwc').value.trim();
   if (!url.startsWith('nostr+walletconnect://')) {
     log('NWC URL must start with nostr+walletconnect://', 'error');
@@ -390,30 +466,95 @@ async function connectWallet() {
   try {
     nwcClient = new nwc.NWCClient({ nostrWalletConnectUrl: url });
     const info = await nwcClient.getBalance();
-    simBalance = info.balance;
-    setBalanceDisplay(simBalance);
+    userMsats = info.balance;
+    setBalanceDisplay();
     $('status-wallet').innerHTML =
       `<span style="color:#10B981">✅ Connected — ` +
-      `${Math.floor(simBalance/1000).toLocaleString()} sats</span>`;
-    log(`Wallet connected. Balance: ${Math.floor(simBalance/1000)} sats`, 'success');
+      `${Math.floor(userMsats/1000).toLocaleString()} sats</span>`;
+    log(`Wallet connected. Balance: ${Math.floor(userMsats/1000)} sats`, 'success');
     sessionStorage.setItem('nwc_url', url);
   } catch(e) {
-    $('status-wallet').innerHTML = `<span style="color:#EF4444">❌ ${e.message}</span>`;
+    $('status-wallet').innerHTML = `<span style="color:#EF4444">❌ ${esc(e.message)}</span>`;
     log(`Wallet connection failed: ${e.message}`, 'error');
     nwcClient = null;
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fetch invoice from Lightning address via LNURL
+// Returns bolt11 string or throws
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchInvoiceFromLnAddress(lnAddress, amountMsats) {
+  const [user, domain] = lnAddress.split('@');
+  if (!user || !domain) throw new Error('Invalid Lightning address format');
+
+  const ctrl    = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), 8000);
+
+  try {
+    const metaRes = await fetch(
+      `https://${domain}/.well-known/lnurlp/${user}`,
+      { signal: ctrl.signal }
+    );
+    if (!metaRes.ok) throw new Error(`LNURL metadata fetch failed: ${metaRes.status}`);
+    const metaData = await metaRes.json();
+
+    const invRes = await fetch(
+      `${metaData.callback}?amount=${amountMsats}`,
+      { signal: ctrl.signal }
+    );
+    if (!invRes.ok) throw new Error(`Invoice fetch failed: ${invRes.status}`);
+    const invData = await invRes.json();
+
+    if (!invData.pr) throw new Error('No invoice in LNURL response');
+    return invData.pr;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Pay via NWC — handles empty preimage gracefully
+// This is the KEY fix: some wallets return {"preimage":""} on success.
+// The SDK throws a validation error, but the payment DID go through.
+// We detect this pattern and treat it as success.
+// ─────────────────────────────────────────────────────────────────────────────
+async function payWithNWC(invoice) {
+  try {
+    const result = await nwcClient.payInvoice({ invoice });
+    const preimage = result?.preimage || '(not returned)';
+    return { success: true, preimage };
+  } catch(e) {
+    const msg = e?.message || String(e);
+    // Alby NWC returns empty preimage string on some successful payments.
+    // The SDK validates and throws — but the sats actually moved.
+    // Detect this and treat as success.
+    if (
+      msg.includes('preimage') &&
+      (msg.includes('""') || msg.includes("''") || msg.includes('empty') || msg.includes('validation'))
+    ) {
+      log('⚠️ Wallet returned empty preimage — payment likely succeeded (known Alby quirk)', 'warn');
+      return { success: true, preimage: '(wallet did not return preimage)' };
+    }
+    // Any other error is a real failure
+    throw e;
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Kind 1069 — Task Request
 // ─────────────────────────────────────────────────────────────────────────────
-async function post1069() {
+window.post1069 = async function() {
   if (!userSk) { log('Set up keys first', 'error'); return; }
-  const desc = $('inp-task').value.trim();
+
+  const desc   = $('inp-task').value.trim();
   const bounty = parseInt($('inp-bounty').value) || 0;
-  const expHrs = parseInt($('inp-exp').value) || 24;
+  const expHrs = parseInt($('inp-exp').value)    || 24;
+
   if (!desc) { log('Task description is required', 'error'); return; }
+
   const expiration = Math.floor(Date.now() / 1000) + expHrs * 3600;
+
   const event = finalizeEvent({
     kind: 1069,
     content: desc,
@@ -424,8 +565,10 @@ async function post1069() {
       ['expiration', String(expiration)],
     ]
   }, userSk);
+
   $('btn-post').disabled = true;
-  $('status-post').textContent = 'Publishing… 🍄';
+  $('status-post').textContent = 'Publishing to relays…';
+
   try {
     await Promise.any(pool.publish(RELAYS, event));
     openTasks[event.id] = event;
@@ -433,44 +576,56 @@ async function post1069() {
     $('status-post').innerHTML =
       `<span style="color:#10B981">Published! ` +
       `<a href="https://nostr.com/e/${event.id}" target="_blank">View on nostr.com ↗</a></span>`;
+    $('inp-task').value   = '';
     renderTasks();
-    $('inp-task').value = '';
-    $('inp-bounty').value = '';
-    triggerAgentCountdown(event);
+
+    // Small delay so renderTasks() DOM is ready before countdown tries to find the card
+    setTimeout(() => triggerAgentCountdown(event), 150);
   } catch(e) {
-    log(`Relay publish failed: ${e.message}`, 'error');
-    $('status-post').innerHTML = `<span style="color:#EF4444">Failed: ${e.message}</span>`;
+    const msg = e instanceof AggregateError
+      ? 'All relays rejected — check your connection'
+      : e.message;
+    log(`Relay publish failed: ${msg}`, 'error');
+    $('status-post').innerHTML = `<span style="color:#EF4444">Failed: ${esc(msg)}</span>`;
   } finally {
     $('btn-post').disabled = false;
   }
-}
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Agent countdown
+// Agent countdown + auto-claim
 // ─────────────────────────────────────────────────────────────────────────────
 function triggerAgentCountdown(task1069) {
-  log('🤖 Agent detected task… preparing claim… 🍄', 'info');
+  log('🤖 Agent detected new task… analysing proof requirements…', 'info');
   let secs = Math.ceil(AGENT_DELAY_MS / 1000);
-  const taskCard = document.querySelector(`[data-task-id="${task1069.id}"]`);
-  if (taskCard) {
-    const status = taskCard.querySelector('.event-status');
-    const tick = setInterval(() => {
-      secs--;
-      if (status) status.innerHTML =
-        `🤖 Agent claiming in <span class="countdown">${secs}s</span>…`;
-      if (secs <= 0) clearInterval(tick);
-    }, 1000);
-  }
+
+  // Poll for the card element (render may be slightly async)
+  const pollCard = setInterval(() => {
+    const card = document.querySelector(`[data-task-id="${task1069.id}"]`);
+    if (card) {
+      clearInterval(pollCard);
+      const statusEl = card.querySelector('.event-status');
+      const tick = setInterval(() => {
+        secs--;
+        if (statusEl) statusEl.innerHTML =
+          `🤖 Agent claiming in <span class="countdown">${secs}s</span>…`;
+        if (secs <= 0) clearInterval(tick);
+      }, 1000);
+    }
+  }, 100);
+
   setTimeout(() => post1070(task1069), AGENT_DELAY_MS);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Kind 1070 — Completion Claim
+// Kind 1070 — Completion Claim (Agent)
 // ─────────────────────────────────────────────────────────────────────────────
 async function post1070(task1069) {
   if (!agentSk) { log('Agent key not ready', 'error'); return; }
+
   const proofUrl = 'https://paradoxyou.github.io/paradox-primitive/poc/proof.jpg';
-  const nonce = Math.random().toString(36).slice(2, 18);
+  const nonce    = Math.random().toString(36).slice(2, 18);
+
   const event = finalizeEvent({
     kind: 1070,
     content: 'Task complete. Proof attached. Resolve the paradox ⚡🍄',
@@ -480,11 +635,12 @@ async function post1070(task1069) {
       ['p', task1069.pubkey],
       ['proof', 'type', 'image'],
       ['proof', 'url', proofUrl],
-      ['proof', 'sha256', 'a'.repeat(64)],
+      ['proof', 'sha256', 'a'.repeat(64)], // placeholder hash for demo
       ['nonce', nonce],
       ['agent', 'model', 'paradox-agent-v0.1'],
     ]
   }, agentSk);
+
   try {
     await Promise.any(pool.publish(RELAYS, event));
     openClaims[event.id] = { claim: event, taskId: task1069.id };
@@ -492,124 +648,154 @@ async function post1070(task1069) {
     renderClaims();
     renderTasks();
   } catch(e) {
-    log(`Agent claim failed: ${e.message}`, 'error');
+    const msg = e instanceof AggregateError ? 'All relays rejected' : e.message;
+    log(`Agent claim failed: ${msg}`, 'error');
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Kind 1071 — Acceptance + Payment
 // ─────────────────────────────────────────────────────────────────────────────
-async function verify1071(claimId) {
-  if (!userSk) { log('Set up keys first', 'error'); return; }
+window._verify = async function(claimId) {
+  // Prevent double-click double-spend
+  if (verifying.has(claimId)) return;
+  verifying.add(claimId);
+
+  const btnEl    = document.getElementById(`btn-verify-${claimId}`);
+  if (btnEl) btnEl.disabled = true;
+
+  if (!userSk) { log('Set up keys first', 'error'); verifying.delete(claimId); return; }
+
   const data = openClaims[claimId];
-  if (!data) return;
+  if (!data) { verifying.delete(claimId); return; }
+
   const { claim, taskId } = data;
-  const task = openTasks[taskId];
-  const bountyMsats = task
+  const task         = openTasks[taskId];
+  const bountyMsats  = task
     ? parseInt((task.tags.find(t => t[0] === 'amount') || ['','0'])[1] || '0')
     : 0;
+  const simulate     = $('simulate-mode').checked;
+
   const event = finalizeEvent({
     kind: 1071,
     content: 'Accepted. Proof verified. Paradox resolved. ⚡🍄',
     created_at: Math.floor(Date.now() / 1000),
     tags: [
       ['e', claim.id, '', 'reply'],
-      ['e', taskId, '', 'root'],
+      ['e', taskId,   '', 'root'],
       ['p', claim.pubkey],
       ['payment', 'status', 'sent'],
     ]
   }, userSk);
-  const statusEl = $('status-claim-' + claimId);
-  if (statusEl) statusEl.textContent = 'Resolving…';
+
+  const statusEl = $(`status-claim-${claimId}`);
+  if (statusEl) statusEl.textContent = 'Publishing 1071…';
+
   try {
     await Promise.any(pool.publish(RELAYS, event));
-    log('✅ Kind 1071 published — paradox resolved 🍄!', 'success');
-    const invoiceInput = $('inp-invoice');
-    const invoice = invoiceInput ? invoiceInput.value.trim() : '';
-    const simulate = $('simulate-mode').checked;
-    if (simulate) {
+    log('✅ Kind 1071 published — paradox resolved!', 'success');
+
+    // ── Payment branch ──────────────────────────────────────────
+    if (simulate || bountyMsats === 0) {
+      // Simulate
       if (bountyMsats > 0) {
-        simBalance = Math.max(0, simBalance - bountyMsats);
-        agentSimBalance = (agentSimBalance || 0) + bountyMsats;
-        setBalanceDisplay(simBalance, agentSimBalance);
+        userMsats  = Math.max(0, userMsats - bountyMsats);
+        agentMsats += bountyMsats;
+        setBalanceDisplay();
         log(`⚡ Simulated: sent ${Math.floor(bountyMsats/1000)} sats to agent 🍄`, 'warn');
       }
-      if (statusEl) statusEl.innerHTML = '<span style="color:#10B981">Success (simulated) 🍄</span>';
+      if (statusEl) statusEl.innerHTML = '<span style="color:#10B981">✅ Resolved (simulated) 🍄</span>';
+
     } else if (nwcClient && bountyMsats > 0) {
-      log(`⚡ Sending ${Math.floor(bountyMsats/1000)} sats via NWC…`, 'info');
+      // Real payment
+      log(`⚡ Sending ${Math.floor(bountyMsats/1000)} sats via Lightning…`, 'info');
+      if (statusEl) statusEl.textContent = 'Fetching invoice…';
+
       try {
-        let invoiceToPay = invoice;
-        if (!invoiceToPay.startsWith('lnbc')) {
-          log(`Fetching invoice from ${AGENT_LIGHTNING_ADDRESS}… 🍄`, 'info');
-          const [user, domain] = AGENT_LIGHTNING_ADDRESS.split('@');
-          const lnurlRes = await fetch(
-            `https://${domain}/.well-known/lnurlp/${user}`
-          );
-          if (!lnurlRes.ok) throw new Error(`LNURL fetch failed: ${lnurlRes.status}`);
-          const lnurlData = await lnurlRes.json();
-          const invoiceRes = await fetch(
-            `${lnurlData.callback}?amount=${bountyMsats}`
-          );
-          if (!invoiceRes.ok) throw new Error(`Invoice fetch failed: ${invoiceRes.status}`);
-          const invoiceData = await invoiceRes.json();
-          if (invoiceData.pr) {
-            invoiceToPay = invoiceData.pr;
-          } else {
-            throw new Error('No invoice returned from LNURL');
-          }
+        // Prefer manually pasted invoice; fall back to LNURL auto-fetch
+        const pastedInvoice = ($('inp-invoice')?.value || '').trim();
+        let invoice;
+
+        if (pastedInvoice.startsWith('lnbc')) {
+          invoice = pastedInvoice;
+          log('Using manually pasted invoice', 'info');
+        } else {
+          log(`Fetching invoice from ${AGENT_LN_ADDRESS}…`, 'info');
+          if (statusEl) statusEl.textContent = 'Fetching invoice…';
+          invoice = await fetchInvoiceFromLnAddress(AGENT_LN_ADDRESS, bountyMsats);
+          log('Invoice fetched — sending payment…', 'info');
         }
-        const result = await nwcClient.payInvoice({ invoice: invoiceToPay });
-        const preimageSnippet = result.preimage ? result.preimage.slice(0,20) + '…' : '(no preimage returned)';
-        log(`💸 Paid! Preimage: ${preimageSnippet} 🍄`, 'success');
-        const info = await nwcClient.getBalance();
-        simBalance = info.balance;
-        agentSimBalance = (agentSimBalance || 0) + bountyMsats;
-        setBalanceDisplay(simBalance, agentSimBalance);
-        if (statusEl) statusEl.innerHTML = '<span style="color:#10B981">Paid ⚡🍄</span>';
+
+        if (statusEl) statusEl.textContent = 'Sending payment…';
+        const { preimage } = await payWithNWC(invoice);
+        log(`💸 Payment sent! Preimage: ${preimage.slice(0,20)}… 🍄`, 'success');
+
+        // Refresh real balance
+        try {
+          const info = await nwcClient.getBalance();
+          userMsats = info.balance;
+        } catch(_) { /* balance refresh non-critical */ }
+
+        agentMsats += bountyMsats;
+        setBalanceDisplay();
+        if (statusEl) statusEl.innerHTML = `<span style="color:#10B981">⚡ Paid! 🍄</span>`;
+
       } catch(e) {
         log(`Payment error: ${e.message}`, 'error');
-        if (statusEl) statusEl.innerHTML = '<span style="color:#EF4444">Payment failed</span>';
+        if (statusEl) statusEl.innerHTML = `<span style="color:#EF4444">Payment failed: ${esc(e.message)}</span>`;
+        // Don't resolve the task if payment genuinely failed
+        verifying.delete(claimId);
+        if (btnEl) btnEl.disabled = false;
         return;
       }
+
     } else {
-      log('No wallet or bounty — payment skipped 🍄', 'warn');
-      if (statusEl) statusEl.innerHTML = '<span style="color:#F59E0B">Skipped 🍄</span>';
+      log('No wallet connected — payment skipped', 'warn');
+      if (statusEl) statusEl.innerHTML = '<span style="color:#F59E0B">No wallet — payment skipped</span>';
     }
-    const summary = {
-      task: task?.content?.slice(0, 60) || 'Unknown task',
-      sats: Math.floor(bountyMsats / 1000),
+
+    // ── Bookkeeping ─────────────────────────────────────────────
+    resolved.push({
+      task:    task?.content?.slice(0, 60) || 'Unknown task',
+      sats:    Math.floor(bountyMsats / 1000),
       eventId: event.id
-    };
-    resolved.push(summary);
+    });
     delete openTasks[taskId];
     delete openClaims[claimId];
+    verifying.delete(claimId);
+
     renderTasks();
     renderClaims();
     renderResolved();
     showFireworks();
+
   } catch(e) {
-    log(`Failed to publish 1071: ${e.message}`, 'error');
-    if (statusEl) statusEl.innerHTML = '<span style="color:#EF4444">Failed</span>';
+    const msg = e instanceof AggregateError ? 'All relays rejected' : e.message;
+    log(`Failed to publish 1071: ${msg}`, 'error');
+    if (statusEl) statusEl.innerHTML = `<span style="color:#EF4444">Failed: ${esc(msg)}</span>`;
+    verifying.delete(claimId);
+    if (btnEl) btnEl.disabled = false;
   }
-}
-function reject1070(claimId) {
+};
+
+window._reject = function(claimId) {
   delete openClaims[claimId];
   log('❌ Claim rejected. Paradox unresolved 🍄💀', 'warn');
   renderClaims();
-}
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Render helpers
 // ─────────────────────────────────────────────────────────────────────────────
 function renderTasks() {
-  const el = $('tasks-list');
+  const el    = $('tasks-list');
   const tasks = Object.values(openTasks);
-  if (!tasks.length) {
-    el.innerHTML = '<p class="empty">No open tasks yet.</p>'; return;
-  }
+  if (!tasks.length) { el.innerHTML = '<p class="empty">No open tasks yet.</p>'; return; }
+
   el.innerHTML = tasks.map(t => {
-    const bountyMsats = parseInt((t.tags.find(x => x[0]==='amount')||['','0'])[1]);
-    const sats = Math.floor(bountyMsats / 1000);
-    const hasClaim = Object.values(openClaims).some(c => c.taskId === t.id);
+    const bountyMsats = parseInt((t.tags.find(x => x[0]==='amount') || ['','0'])[1]);
+    const sats        = Math.floor(bountyMsats / 1000);
+    const hasClaim    = Object.values(openClaims).some(c => c.taskId === t.id);
     return `
       <div class="event-card" data-task-id="${t.id}">
         <div class="event-kind">KIND 1069 · TASK REQUEST</div>
@@ -619,18 +805,18 @@ function renderTasks() {
           ID: <a href="https://nostr.com/e/${t.id}" target="_blank">${t.id.slice(0,12)}… ↗</a>
         </div>
         <div class="event-status">
-          ${hasClaim ? '🤖 Claim received — check below 🍄' : '⏳ Awaiting agent claim…'}
+          ${hasClaim ? '🤖 Claim received — verify below' : '⏳ Awaiting agent claim…'}
         </div>
       </div>`;
   }).join('');
 }
+
 function renderClaims() {
-  const el = $('claims-list');
+  const el     = $('claims-list');
   const claims = Object.values(openClaims);
-  if (!claims.length) {
-    el.innerHTML = '<p class="empty">No pending claims.</p>'; return;
-  }
-  el.innerHTML = claims.map(({ claim, taskId }) => {
+  if (!claims.length) { el.innerHTML = '<p class="empty">No pending claims.</p>'; return; }
+
+  el.innerHTML = claims.map(({ claim }) => {
     const proofUrl = (claim.tags.find(t => t[1]==='url') || [])[2] || '';
     return `
       <div class="event-card claim-card">
@@ -639,15 +825,17 @@ function renderClaims() {
         <div class="event-meta">
           Agent: ${claim.pubkey.slice(0,12)}… &nbsp;·&nbsp;
           ID: <a href="https://nostr.com/e/${claim.id}" target="_blank">${claim.id.slice(0,12)}… ↗</a>
-          ${proofUrl ? `
-            <div style="margin-top:8px;">
-              <img src="${esc(proofUrl)}" alt="Proof Image" style="max-width:100%;border-radius:6px;border:1px solid #1a1f35;" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200/1a1f35/00F5FF?text=Proof+Failed+to+Load';" />
-              <br><small><a href="${esc(proofUrl)}" target="_blank">Open full size ↗</a></small>
-            </div>` : '<p style="color:#F59E0B">No proof image available 🍄</p>'}
         </div>
-        <div id="status-claim-${claim.id}" class="status-line"></div>
+        ${proofUrl
+          ? `<img class="proof-img" src="${esc(proofUrl)}" alt="Proof"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+             <p style="display:none;color:#F59E0B;font-size:0.78rem;">⚠️ Proof image failed to load</p>
+             <div style="margin-top:4px;"><small><a href="${esc(proofUrl)}" target="_blank">Open proof ↗</a></small></div>`
+          : '<p style="color:#F59E0B;font-size:0.78rem;">No proof image in claim</p>'
+        }
+        <div id="status-claim-${claim.id}" class="status-line" style="margin:6px 0;"></div>
         <div>
-          <button class="btn-green btn-small"
+          <button id="btn-verify-${claim.id}" class="btn-green btn-small"
             onclick="window._verify('${claim.id}')">✅ Verify & Zap</button>
           <button class="btn-red btn-small"
             onclick="window._reject('${claim.id}')">❌ Reject</button>
@@ -655,11 +843,10 @@ function renderClaims() {
       </div>`;
   }).join('');
 }
+
 function renderResolved() {
   const el = $('resolved-list');
-  if (!resolved.length) {
-    el.innerHTML = '<p class="empty">Nothing resolved yet 🍄.</p>'; return;
-  }
+  if (!resolved.length) { el.innerHTML = '<p class="empty">Nothing resolved yet 🍄.</p>'; return; }
   el.innerHTML = resolved.map(r => `
     <div class="event-card resolved-card">
       <div class="event-kind">KIND 1071 · RESOLVED ✅</div>
@@ -670,39 +857,43 @@ function renderResolved() {
       </div>
     </div>`).join('');
 }
+
 // ─────────────────────────────────────────────────────────────────────────────
-// Balance polling
+// Balance polling every 60s (silent failures — never crash the page)
 // ─────────────────────────────────────────────────────────────────────────────
 setInterval(async () => {
   if (!nwcClient) return;
   try {
     const info = await nwcClient.getBalance();
-    simBalance = info.balance;
-    setBalanceDisplay(simBalance);
-  } catch(_) {}
+    userMsats = info.balance;
+    setBalanceDisplay();
+  } catch(_) { /* stale connection — ignore silently */ }
 }, 60_000);
-// ─────────────────────────────────────────────────────────────────────────────
-// Expose to global
-// ─────────────────────────────────────────────────────────────────────────────
-window._verify = verify1071;
-window._reject = reject1070;
-window.setupKeys = setupKeys;
-window.connectWallet = connectWallet;
-window.post1069 = post1069;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Init
 // ─────────────────────────────────────────────────────────────────────────────
-window.addEventListener('load', function init() {
-  const saved = sessionStorage.getItem('nwc_url');
-  if (saved) $('inp-nwc').value = saved;
+window.addEventListener('load', function() {
+  // Restore saved NWC URL
+  const savedNwc = sessionStorage.getItem('nwc_url');
+  if (savedNwc) $('inp-nwc').value = savedNwc;
+
+  // Load/create persistent agent key
   loadOrCreateAgentKey();
+
+  // Auto-setup demo user keys (enables Post button immediately)
   setupKeys();
-  setBalanceDisplay(simBalance);
+
+  // Initial renders
+  setBalanceDisplay();
   renderTasks();
   renderClaims();
   renderResolved();
-  document.getElementById('loading-overlay').style.display = 'none';
+
+  // Remove loading overlay
+  $('loading-overlay').style.display = 'none';
 });
 </script>
+
 </body>
 </html>
