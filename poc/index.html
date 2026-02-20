@@ -246,11 +246,11 @@
   </div>
 
   <div class="footer">
-    Real events on Nostr relays (damus · primal · nos.lol) · 
+    Real events on Nostr relays (damus · primal · nos.lol) &nbsp;·&nbsp;
     <a href="https://github.com/paradoxyou/paradox-primitive" target="_blank">GitHub</a>
-    · 
+    &nbsp;·&nbsp;
     <a href="https://paradox.you" target="_blank">Full NIP Spec</a>
-    · Paradox Primitive α — kind numbers subject to change
+    &nbsp;·&nbsp; Paradox Primitive α — kind numbers subject to change
   </div>
 
 </div>
@@ -289,6 +289,7 @@ let agentSk = null;
 let agentPk = null;
 let nwcClient = null;
 let simBalance = 50000;
+let agentSimBalance = 0; // simulated agent balance rise
 const openTasks = {};
 const openClaims = {};
 const resolved = [];
@@ -307,10 +308,11 @@ function log(msg, type = 'info') {
   el.prepend(line);
 }
 
-function setBalanceDisplay(msats) {
-  const sats = Math.floor(msats / 1000);
+function setBalanceDisplay(userMsats, agentMsats = agentSimBalance) {
+  const userSats = Math.floor(userMsats / 1000);
+  const agentSats = Math.floor(agentMsats / 1000);
   const el = $('balance-display');
-  el.textContent = `User: ⚡ ${sats.toLocaleString()} sats`;
+  el.innerHTML = `User: ⚡ ${userSats.toLocaleString()} sats<br>Agent: ⚡ ${agentSats.toLocaleString()} sats`;
   el.classList.add('pulse');
   setTimeout(() => el.classList.remove('pulse'), 700);
 }
@@ -409,7 +411,7 @@ async function post1069() {
     ]
   }, userSk);
   $('btn-post').disabled = true;
-  $('status-post').textContent = 'Publishing…';
+  $('status-post').textContent = 'Publishing… 🍄';
   try {
     await Promise.any(pool.publish(RELAYS, event));
     openTasks[event.id] = event;
@@ -449,8 +451,8 @@ function triggerAgentCountdown(task1069) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Kind 1070 — Completion Claim
-// ─────────────────────────────────────────────────────────────────────────────
+ // Kind 1070 — Completion Claim
+ // ─────────────────────────────────────────────────────────────────────────────
 async function post1070(task1069) {
   if (!agentSk) { log('Agent key not ready', 'error'); return; }
   const proofUrl = 'https://paradoxyou.github.io/paradox-primitive/poc/proof.jpg';
@@ -463,7 +465,7 @@ async function post1070(task1069) {
       ['e', task1069.id, '', 'root'],
       ['p', task1069.pubkey],
       ['proof', 'type', 'image'],
-      ['proof', 'url', proofUrl],
+      ['proof', 'url', proofUrl'],
       ['proof', 'sha256', 'a'.repeat(64)],
       ['nonce', nonce],
       ['agent', 'model', 'paradox-agent-v0.1'],
@@ -485,7 +487,6 @@ async function post1070(task1069) {
 // ─────────────────────────────────────────────────────────────────────────────
 async function verify1071(claimId) {
   if (!userSk) { log('Set up keys first', 'error'); return; }
-
   const data = openClaims[claimId];
   if (!data) return;
   const { claim, taskId } = data;
@@ -493,7 +494,6 @@ async function verify1071(claimId) {
   const bountyMsats = task
     ? parseInt((task.tags.find(t => t[0] === 'amount') || ['','0'])[1] || '0')
     : 0;
-
   const event = finalizeEvent({
     kind: 1071,
     content: 'Accepted. Proof verified. Paradox resolved. ⚡🍄',
@@ -505,22 +505,19 @@ async function verify1071(claimId) {
       ['payment', 'status', 'sent'],
     ]
   }, userSk);
-
   const statusEl = $('status-claim-' + claimId);
   if (statusEl) statusEl.textContent = 'Resolving…';
-
   try {
     await Promise.any(pool.publish(RELAYS, event));
     log('✅ Kind 1071 published — paradox resolved 🍄!', 'success');
-
     const invoiceInput = $('inp-invoice');
     const invoice = invoiceInput ? invoiceInput.value.trim() : '';
     const simulate = $('simulate-mode').checked;
-
     if (simulate) {
       if (bountyMsats > 0) {
         simBalance = Math.max(0, simBalance - bountyMsats);
-        setBalanceDisplay(simBalance);
+        agentSimBalance = (agentSimBalance || 0) + bountyMsats; // track agent rise
+        setBalanceDisplay(simBalance, agentSimBalance);
         log(`⚡ Simulated: sent ${Math.floor(bountyMsats/1000)} sats to agent 🍄`, 'warn');
       }
       if (statusEl) statusEl.innerHTML = '<span style="color:#F59E0B">Simulated 🍄</span>';
@@ -549,13 +546,14 @@ async function verify1071(claimId) {
         }
 
         const result = await nwcClient.payInvoice({ invoice: invoiceToPay });
-        // Null-safe preimage logging
-        const preimageSnippet = result.preimage ? result.preimage.slice(0,20) + '…' : 'No preimage returned';
+        // Null-safe preimage + success check
+        const preimageSnippet = result.preimage ? result.preimage.slice(0,20) + '…' : '(no preimage returned)';
         log(`💸 Paid! Preimage: ${preimageSnippet} 🍄`, 'success');
 
         const info = await nwcClient.getBalance();
         simBalance = info.balance;
-        setBalanceDisplay(simBalance);
+        agentSimBalance = (agentSimBalance || 0) + bountyMsats;
+        setBalanceDisplay(simBalance, agentSimBalance);
         if (statusEl) statusEl.innerHTML = '<span style="color:#10B981">Paid ⚡🍄</span>';
       } catch(e) {
         log(`Payment error: ${e.message}`, 'error');
@@ -585,7 +583,7 @@ async function verify1071(claimId) {
     if (statusEl) statusEl.innerHTML = '<span style="color:#EF4444">Failed</span>';
   }
 }
- function reject1070(claimId) {
+function reject1070(claimId) {
   delete openClaims[claimId];
   log('❌ Claim rejected. Paradox unresolved 🍄💀', 'warn');
   renderClaims();
@@ -609,7 +607,7 @@ function renderTasks() {
         <div class="event-content">${esc(t.content)}</div>
         <div class="event-meta">
           Bounty: ${sats} sats &nbsp;·&nbsp;
-          ID: <a href="https://nostr.com/e/${t.id}" target="_blank">${t.id.slice(0,12)}… ↗</a>
+          ID: <a href="https://nostr.com/e/$$   {t.id}" target="_blank">   $${t.id.slice(0,12)}… ↗</a>
         </div>
         <div class="event-status">
           ${hasClaim ? '🤖 Claim received — check below 🍄' : '⏳ Awaiting agent claim…'}
@@ -631,7 +629,7 @@ function renderClaims() {
         <div class="event-content">${esc(claim.content)}</div>
         <div class="event-meta">
           Agent: ${claim.pubkey.slice(0,12)}… &nbsp;·&nbsp;
-          ID: <a href="https://nostr.com/e/${claim.id}" target="_blank">${claim.id.slice(0,12)}… ↗</a>
+          ID: <a href="https://nostr.com/e/$$   {claim.id}" target="_blank">   $${claim.id.slice(0,12)}… ↗</a>
           ${proofUrl ? `
             <div style="margin-top:8px;">
               <img src="${esc(proofUrl)}" alt="Proof Image" style="max-width:100%;border-radius:6px;border:1px solid #1a1f35;" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200/1a1f35/00F5FF?text=Proof+Failed+to+Load';" />
@@ -656,7 +654,7 @@ function renderResolved() {
   el.innerHTML = resolved.map(r => `
     <div class="event-card resolved-card">
       <div class="event-kind">KIND 1071 · RESOLVED ✅</div>
-      <div class="event-content">${esc(r.task)}${r.task.length >= 60 ? '…' : ''}</div>
+      <div class="event-content">$$   {esc(r.task)}   $${r.task.length >= 60 ? '…' : ''}</div>
       <div class="event-meta">
         Paid: ${r.sats} sats &nbsp;·&nbsp;
         <a href="https://nostr.com/e/${r.eventId}" target="_blank">View 1071 ↗</a>
