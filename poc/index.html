@@ -14,12 +14,10 @@
       padding: 20px;
     }
     h1 { color: #00F5FF; font-size: 1.6rem; margin-bottom: 4px; }
-    h2 { color: #00F5FF; font-size: 0.95rem; margin: 20px 0 10px;
-         border-bottom: 1px solid #1a1f35; padding-bottom: 6px; }
+    h2 { color: #00F5FF; font-size: 0.95rem; margin: 20px 0 10px; border-bottom: 1px solid #1a1f35; padding-bottom: 6px; }
     h3 { color: #7C3AED; font-size: 0.82rem; margin: 14px 0 6px; }
     .subtitle { color: #6B7280; font-size: 0.82rem; margin-bottom: 24px; }
     a { color: #00F5FF; }
-    /* Balance corner */
     #balance-display {
       position: fixed; top: 14px; right: 14px;
       background: #0A0A1F; border: 1px solid #00F5FF;
@@ -32,7 +30,6 @@
       transform: scale(1.2);
       box-shadow: 0 0 30px #00F5FF88;
     }
-    /* Fireworks */
     #fireworks {
       display: none; position: fixed;
       top: 50%; left: 50%;
@@ -68,6 +65,7 @@
       padding: 8px 10px; border-radius: 6px;
       font-family: inherit; font-size: 0.83rem;
       margin-bottom: 8px;
+      word-break: break-all;
     }
     input:focus, textarea:focus { outline: none; border-color: #00F5FF; }
     textarea { height: 64px; resize: vertical; }
@@ -150,8 +148,7 @@
 
   <h1>Paradox Primitive <span class="nip-badge">POC α</span></h1>
   <p class="subtitle">
-    Kind 1069 → 1070 → 1071 → sats &nbsp;·&nbsp;
-    Real Nostr events &nbsp;·&nbsp; No middlemen &nbsp;·&nbsp; ⚡🍄
+    Kind 1069 → 1070 → 1071 → sats · Real Nostr events · No middlemen · ⚡🍄
   </p>
 
   <p style="color:#6B7280;font-size:0.82rem;text-align:center;margin-bottom:20px;">
@@ -160,16 +157,14 @@
 
   <div class="grid">
 
-    <!-- LEFT COLUMN -->
     <div>
 
-      <!-- Setup panel -->
       <div class="panel">
         <h2>⚙️ Setup</h2>
 
         <h3>1. Your Nostr Key (Requester)</h3>
         <input id="inp-sk" type="password"
-          placeholder="Hex secret key (64 chars) — leave blank for demo key" />
+          placeholder="Hex nsec (optional — leave blank for demo)" />
         <button class="btn-purple" onclick="setupKeys()">Set Keys</button>
         <div id="status-keys" class="status-line" style="color:#6B7280">
           Auto-generating demo key…
@@ -185,11 +180,13 @@
 
         <div class="toggle-label">
           <input type="checkbox" id="simulate-mode" checked />
-          Simulate mode (no real payments)
+          Simulate mode (safe testing — no real sats move) ✓
+          <div style="font-size:0.75rem;color:#6B7280;margin-top:4px;">
+            Checked = demo only (sats simulate). Unchecked = real zaps to your agent wallet.
+          </div>
         </div>
       </div>
 
-      <!-- Log panel -->
       <div class="panel">
         <h2>📋 Live Event Log</h2>
         <div id="log">
@@ -199,10 +196,8 @@
 
     </div>
 
-    <!-- RIGHT COLUMN -->
     <div>
 
-      <!-- Post 1069 -->
       <div class="panel">
         <h2>🎯 Post a Task <span class="nip-badge">Kind 1069</span></h2>
         <textarea id="inp-task"
@@ -219,7 +214,6 @@
 
       <div class="flow-arrow">↓ &nbsp; AI agent detects & replies &nbsp; ↓</div>
 
-      <!-- Open tasks -->
       <div class="panel">
         <h2>📬 Open Tasks <span class="nip-badge">Kind 1069</span></h2>
         <div id="tasks-list">
@@ -229,7 +223,6 @@
 
       <div class="flow-arrow">↓ &nbsp; Verify or reject the claim &nbsp; ↓</div>
 
-      <!-- Pending claims -->
       <div class="panel">
         <h2>🤖 Pending Claims <span class="nip-badge">Kind 1070</span></h2>
         <div id="claims-list">
@@ -239,7 +232,6 @@
 
       <div class="flow-arrow">↓ &nbsp; On verify: 1071 + zap fires &nbsp; ↓</div>
 
-      <!-- Resolved -->
       <div class="panel">
         <h2>✅ Resolved <span class="nip-badge">Kind 1071</span></h2>
         <div id="resolved-list">
@@ -281,8 +273,8 @@ const RELAYS = [
   'wss://relay.primal.net',
   'wss://nos.lol'
 ];
-const AGENT_DELAY_MS = 3000; // drama delay
-const AGENT_LIGHTNING_ADDRESS = 'paradoxprimitive@lnaddress.com'; // ← YOUR ADDRESS HERE
+const AGENT_DELAY_MS = 3000;
+const AGENT_LIGHTNING_ADDRESS = 'paradoxprimitive@lnaddress.com'; // YOUR ADDRESS HERE
 
 // ─────────────────────────────────────────────────────────────────────────────
 // State
@@ -293,7 +285,7 @@ let userPk = null;
 let agentSk = null;
 let agentPk = null;
 let nwcClient = null;
-let simBalance = 50000; // simulated msats
+let simBalance = 50000;
 const openTasks = {};
 const openClaims = {};
 const resolved = [];
@@ -603,7 +595,11 @@ function renderClaims() {
         <div class="event-meta">
           Agent: ${claim.pubkey.slice(0,12)}… &nbsp;·&nbsp;
           ID: <a href="https://nostr.com/e/${claim.id}" target="_blank">${claim.id.slice(0,12)}… ↗</a>
-          ${proofUrl ? `&nbsp;·&nbsp; <a href="${esc(proofUrl)}" target="_blank">View proof ↗</a>` : ''}
+          ${proofUrl ? `
+            <div style="margin-top:8px;">
+              <img src="${esc(proofUrl)}" alt="Proof Image" style="max-width:100%;border-radius:6px;border:1px solid #1a1f35;" />
+              <br><small><a href="${esc(proofUrl)}" target="_blank">Open full size ↗</a></small>
+            </div>` : ''}
         </div>
         <div id="status-claim-${claim.id}" class="status-line"></div>
         <div>
@@ -662,6 +658,9 @@ window.post1069 = post1069;
   renderClaims();
   renderResolved();
 })();
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
