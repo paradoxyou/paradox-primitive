@@ -205,10 +205,10 @@
         <h2>🎯 Post a Task <span class="nip-badge">Kind 1069</span></h2>
         <textarea id="inp-task"
           placeholder="Describe the task — e.g. 'Take a photo proving you're at the Bitcoin conference'"></textarea>
-        <input id="inp-bounty" type="number" min="0" value="21"
-          placeholder="Bounty in sats (optional, default 21)" />
-        <input id="inp-exp" type="number" min="1" value="24"
-          placeholder="Expires in hours" />
+        <label for="inp-bounty" style="font-size:0.75rem;color:#9CA3AF;margin-bottom:4px;display:block;">Bounty in sats (optional, default 21)</label>
+        <input id="inp-bounty" type="number" min="0" value="21" title="Adjust bounty sats" />
+        <label for="inp-exp" style="font-size:0.75rem;color:#9CA3AF;margin-bottom:4px;display:block;">Expires in hours (default 24)</label>
+        <input id="inp-exp" type="number" min="1" value="24" title="Adjust expiration hours" />
         <button id="btn-post" onclick="post1069()">
           Post Kind 1069 Task ⚡
         </button>
@@ -246,11 +246,11 @@
   </div>
 
   <div class="footer">
-    Real events on Nostr relays (damus · primal · nos.lol) · 
+    Real events on Nostr relays (damus · primal · nos.lol) &nbsp;·&nbsp;
     <a href="https://github.com/paradoxyou/paradox-primitive" target="_blank">GitHub</a>
-    · 
+    &nbsp;·&nbsp;
     <a href="https://paradox.you" target="_blank">Full NIP Spec</a>
-    · Paradox Primitive α — kind numbers subject to change
+    &nbsp;·&nbsp; Paradox Primitive α — kind numbers subject to change
   </div>
 
 </div>
@@ -465,7 +465,7 @@ async function post1070(task1069) {
       ['e', task1069.id, '', 'root'],
       ['p', task1069.pubkey],
       ['proof', 'type', 'image'],
-      ['proof', 'url', proofUrl],
+      ['proof', 'url', proofUrl'],
       ['proof', 'sha256', 'a'.repeat(64)],
       ['nonce', nonce],
       ['agent', 'model', 'paradox-agent-v0.1'],
