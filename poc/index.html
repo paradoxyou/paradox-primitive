@@ -141,7 +141,7 @@
 </head>
 <body>
 
-<div id="balance-display">User: ⚡ 0 sats<br>Agent: ⚡ 0 sats</div>
+<div id="balance-display">User: ⚡ 0 sats<br>Agent: ⚡ 0 sats (simulated)</div>
 <div id="fireworks"></div>
 
 <div style="max-width:1080px; margin:0 auto;">
@@ -312,7 +312,7 @@ function setBalanceDisplay(userMsats, agentMsats = agentSimBalance) {
   const userSats = Math.floor(userMsats / 1000);
   const agentSats = Math.floor(agentMsats / 1000);
   const el = $('balance-display');
-  el.innerHTML = `User: ⚡ ${userSats.toLocaleString()} sats<br>Agent: ⚡ ${agentSats.toLocaleString()} sats`;
+  el.innerHTML = `User: ⚡ ${userSats.toLocaleString()} sats<br>Agent: ⚡ ${agentSats.toLocaleString()} sats (simulated)`;
   el.classList.add('pulse');
   setTimeout(() => el.classList.remove('pulse'), 700);
 }
