@@ -505,49 +505,58 @@ async function verify1071(claimId) {
     await Promise.any(pool.publish(RELAYS, event));
     log('✅ Kind 1071 published — paradox resolved 🍄!', 'success');
     const invoice = $('inp-invoice').value.trim();
-    const simulate = $('simulate-mode').checked;
-    if (simulate) {
-      if (bountyMsats > 0) {
-        simBalance = Math.max(0, simBalance - bountyMsats);
-        setBalanceDisplay(simBalance);
-        log(`⚡ Simulated: sent ${Math.floor(bountyMsats/1000)} sats to agent 🍄`, 'warn');
-      }
-      $('status-claim-' + claimId).innerHTML = '<span style="color:#F59E0B">Simulated 🍄</span>';
-    } else if (nwcClient && bountyMsats > 0) {
-      log(`⚡ Sending ${Math.floor(bountyMsats/1000)} sats via NWC…`, 'info');
-      try {
-        const result = await nwcClient.payInvoice({ invoice });
-        log(`💸 Paid! Preimage: ${result.preimage?.slice(0,20)}… 🍄`, 'success');
-        const info = await nwcClient.getBalance();
-        simBalance = info.balance;
-        setBalanceDisplay(simBalance);
-        $('status-claim-' + claimId).innerHTML = '<span style="color:#10B981">Paid ⚡🍄</span>';
-      } catch(e) {
-        log(`Payment error: ${e.message}`, 'error');
-        $('status-claim-' + claimId).innerHTML = '<span style="color:#EF4444">Payment failed</span>';
-        return;
-      }
-    } else {
-      log('No wallet or invoice — payment skipped', 'warn');
-      $('status-claim-' + claimId).innerHTML = '<span style="color:#F59E0B">Skipped 🍄</span>';
-    }
-    const summary = {
-      task: task?.content?.slice(0, 60) || 'Unknown task',
-      sats: Math.floor(bountyMsats / 1000),
-      eventId: event.id
-    };
-    resolved.push(summary);
-    delete openTasks[taskId];
-    delete openClaims[claimId];
-    renderTasks();
-    renderClaims();
-    renderResolved();
-    showFireworks();
-  } catch(e) {
-    log(`Failed to publish 1071: ${e.message}`, 'error');
-    $('status-claim-' + claimId).innerHTML = '<span style="color:#EF4444">Failed</span>';
+const simulate = $('simulate-mode').checked;
+
+if (simulate) {
+  // Simulated payment
+  if (bountyMsats > 0) {
+    simBalance = Math.max(0, simBalance - bountyMsats);
+    setBalanceDisplay(simBalance);
+    log(`⚡ Simulated: sent ${Math.floor(bountyMsats/1000)} sats to agent 🍄`, 'warn');
   }
+  $('status-claim-' + claimId).innerHTML = '<span style="color:#F59E0B">Simulated 🍄</span>';
+} else if (nwcClient && bountyMsats > 0) {
+  // Real payment — prefer LNURL auto-fetch if no manual invoice
+  log(`⚡ Sending ${Math.floor(bountyMsats/1000)} sats via NWC…`, 'info');
+  try {
+    let invoiceToPay = invoice;
+    if (!invoiceToPay.startsWith('lnbc')) {
+      // Auto-fetch from LNURL
+      log(`Fetching invoice from ${AGENT_LIGHTNING_ADDRESS}… 🍄`, 'info');
+      const [user, domain] = AGENT_LIGHTNING_ADDRESS.split('@');
+      const lnurlRes = await fetch(
+        `https://${domain}/.well-known/lnurlp/${user}`
+      );
+      const lnurlData = await lnurlRes.json();
+      
+      const invoiceRes = await fetch(
+        `${lnurlData.callback}?amount=${bountyMsats}`
+      );
+      const invoiceData = await invoiceRes.json();
+      
+      if (invoiceData.pr) {
+        invoiceToPay = invoiceData.pr;
+      } else {
+        throw new Error('No invoice returned from LNURL');
+      }
+    }
+
+    const result = await nwcClient.payInvoice({ invoice: invoiceToPay });
+    log(`💸 Paid! Preimage: ${result.preimage?.slice(0,20)}… 🍄`, 'success');
+    const info = await nwcClient.getBalance();
+    simBalance = info.balance;
+    setBalanceDisplay(simBalance);
+    $('status-claim-' + claimId).innerHTML = '<span style="color:#10B981">Paid ⚡🍄</span>';
+  } catch(e) {
+    log(`Payment error: ${e.message}`, 'error');
+    $('status-claim-' + claimId).innerHTML = '<span style="color:#EF4444">Payment failed</span>';
+    return;
+  }
+} else {
+  log('No wallet or bounty — payment skipped 🍄', 'warn');
+  $('status-claim-' + claimId).innerHTML = '<span style="color:#F59E0B">Skipped 🍄</span>';
 }
+   
 function reject1070(claimId) {
   delete openClaims[claimId];
   log('❌ Claim rejected. Paradox unresolved 🍄💀', 'warn');
