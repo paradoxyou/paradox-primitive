@@ -1,25 +1,24 @@
-# Paradox Primitive
+# Paradox Primitive — Verifiable Proof of Work on Nostr
 
-**Verifiable Proof of Work on Nostr** — a minimal three-kind protocol 
-for requesting tasks, proving completion, and settling instantly in Bitcoin.
+**Kind 1069 → 1070 → 1071 → sats.** No middlemen. Humans & AI on open Bitcoin rails.
 
-`Kind 1069` → Task Request  
-`Kind 1070` → Completion Claim (with proofs)  
-`Kind 1071` → Verification & Acceptance (triggers zap payment)
+## 🔴 Live POC
+**[Try it now →](https://paradoxyou.github.io/paradox-primitive/poc/)**
 
-No middlemen. Humans & AI on open permissionless rails.
+Posts real Nostr events. Verifiable on any client. Optional real Lightning payments via NWC.
+
+## Spec
+Full NIP specification at [paradoxyou.ju.mp](https://paradoxyou.ju.mp)
 
 ## Status
-Draft. Seeking implementers and community feedback.  
-Working NIP title: Paradox Primitive (number TBD by maintainers)
-
-## Read the full spec + landing page
-https://paradox.you
-
-## Discuss on Nostr
-npub1rry4z96r4z6ym702ujetj5a3q0qfgqhvvm4rs5s77dcwjkcsgyuqcjf7pp
+`Draft` — seeking feedback and implementers. Kind numbers: 1069 / 1070 / 1071.
 
 ## How to contribute
-- Build a prototype client that publishes/reads kinds 1069-1071
-- Open issues with feedback on the spec
-- First working prototype earns a bounty ⚡
+- Build a client that reads/writes kinds 1069-1071
+- Open issues with spec feedback
+- First working third-party client earns a bounty ⚡
+
+## Stack (POC)
+- [nostr-tools v2](https://github.com/nbd-wtf/nostr-tools) for event creation/signing
+- [Alby SDK](https://github.com/getAlby/js-sdk) for NWC payments
+- Pure HTML/JS — no build step, forkable in 30 seconds
